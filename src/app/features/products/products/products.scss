@@ -97,10 +97,23 @@
   grid-column: 1 / -1;
 }
 
+.mobile-category-filter {
+  display: none;
+  margin-bottom: var(--space-6);
+}
+
 @media (max-width: 960px) {
   .products-header,
   .products-layout {
     grid-template-columns: 1fr;
+  }
+
+  .mobile-category-filter {
+    display: block;
+  }
+
+  .sidebar {
+    display: none;
   }
 
   .products-grid {

@@ -28,6 +28,7 @@ import { Input } from '../../../shared/ui/input/input';
 import { Pagination } from '../../../shared/ui/pagination/pagination';
 import { ProductCard } from '../../../shared/ui/product-card/product-card';
 import { ProductSkeleton } from '../../../shared/ui/product-skeleton/product-skeleton';
+import { Select, SelectOption } from '../../../shared/ui/select/select';
 
 const PAGE_SIZE = 12;
 
@@ -56,7 +57,7 @@ const LOADING_STATE: ProductsState = {
 
 @Component({
   selector: 'app-products',
-  imports: [Input, ProductCard, Pagination, EmptyState, ProductSkeleton],
+  imports: [Input, Select, ProductCard, Pagination, EmptyState, ProductSkeleton],
   templateUrl: './products.html',
   styleUrl: './products.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -71,6 +72,17 @@ export class Products {
 
   readonly addingProductId = this.cartService.addingProductId;
   readonly cartErrorMessage = signal('');
+
+  readonly categoryOptions = computed<SelectOption[]>(() => [
+    {
+      label: 'All categories',
+      value: '',
+    },
+    ...this.categories().map((category) => ({
+      label: category.name,
+      value: category.slug,
+    })),
+  ]);
 
   private readonly query$ = this.route.queryParamMap.pipe(
     map((params): ProductsPageQuery => ({

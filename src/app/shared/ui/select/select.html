@@ -1,0 +1,30 @@
+<div class="field">
+  @if (label()) {
+    <label class="label" [for]="id()">
+      {{ label() }}
+    </label>
+  }
+
+  <select
+    class="select"
+    [class.select-error]="hasError()"
+    [id]="id()"
+    [value]="value()"
+    [disabled]="disabled()"
+    [attr.aria-invalid]="hasError()"
+    [attr.aria-describedby]="hasError() ? errorId() : null"
+    (change)="onChange($event)"
+  >
+    @for (option of options(); track option.value) {
+      <option [value]="option.value">
+        {{ option.label }}
+      </option>
+    }
+  </select>
+
+  @if (hasError()) {
+    <p class="error-message" [id]="errorId()">
+      {{ error() }}
+    </p>
+  }
+</div>
