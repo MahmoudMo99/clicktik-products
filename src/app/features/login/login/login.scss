@@ -41,6 +41,15 @@
   gap: var(--space-5);
 }
 
+.login-error {
+  border: 1px solid color-mix(in srgb, var(--color-danger) 30%, transparent);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-danger) 8%, transparent);
+  color: var(--color-danger);
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-sm);
+}
+
 @media (max-width: 640px) {
   .login-card {
     padding: var(--space-6);
