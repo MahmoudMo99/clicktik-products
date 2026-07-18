@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { AuthService } from '../../../core/auth/auth.service';
@@ -26,6 +26,7 @@ export class Login {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly route = inject(ActivatedRoute);
 
   username = signal('');
   password = signal('');
@@ -64,7 +65,8 @@ export class Login {
       )
       .subscribe({
         next: () => {
-          void this.router.navigate(['/products']);
+          const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/products';
+          void this.router.navigateByUrl(returnUrl);
         },
         error: (error: unknown) => {
           this.errorMessage.set(this.getLoginErrorMessage(error));
