@@ -11,6 +11,7 @@ import { Button } from '../button/button';
 })
 export class ProductCard {
   product = input.required<Product>();
+  adding = input(false);
 
   addToCart = output<number>();
 

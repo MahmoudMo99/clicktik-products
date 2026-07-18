@@ -18,11 +18,9 @@
   padding-inline: var(--space-8);
   background: var(--color-header-background);
 }
-
 .header {
-  justify-content: flex-start;
+  justify-content: space-between;
 }
-
 .footer {
   justify-content: center;
   color: var(--color-text-muted);

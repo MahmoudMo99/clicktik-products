@@ -5,6 +5,7 @@ import {
   DestroyRef,
   inject,
   linkedSignal,
+  signal,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,6 +20,7 @@ import {
   switchMap,
 } from 'rxjs';
 
+import { CartService } from '../../../core/cart/cart.service';
 import { Product, ProductsResponse } from '../../../core/models/product.models';
 import { ProductsService } from '../../../core/products/products.service';
 import { Input } from '../../../shared/ui/input/input';
@@ -62,6 +64,11 @@ export class Products {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
+
+  private readonly cartService = inject(CartService);
+
+  readonly addingProductId = this.cartService.addingProductId;
+  readonly cartErrorMessage = signal('');
 
   private readonly query$ = this.route.queryParamMap.pipe(
     map((params): ProductsPageQuery => ({
@@ -200,6 +207,15 @@ export class Products {
   }
 
   addProductToCart(productId: number): void {
-    console.log('Add product to cart:', productId);
+    this.cartErrorMessage.set('');
+
+    this.cartService
+      .addProduct(productId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        error: () => {
+          this.cartErrorMessage.set('Could not add product to cart.');
+        },
+      });
   }
 }

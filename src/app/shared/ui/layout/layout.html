@@ -1,6 +1,10 @@
 <div class="page">
   <header class="header">
     <a class="brand" href="/" aria-label="ClickTik home"> ClickTik </a>
+
+    @if (isAuthenticated()) {
+      <app-cart-badge [count]="cartCount()" />
+    }
   </header>
 
   <main class="main">

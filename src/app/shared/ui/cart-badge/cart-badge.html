@@ -1,0 +1,9 @@
+<div class="cart-badge" [attr.aria-label]="'Cart contains ' + count() + ' products'">
+  <span class="cart-icon" aria-hidden="true">🛒</span>
+
+  @if (count() > 0) {
+    <span class="cart-count">
+      {{ count() }}
+    </span>
+  }
+</div>

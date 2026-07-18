@@ -15,7 +15,9 @@
     <div class="footer">
       <p class="price">${{ product().price }}</p>
 
-      <app-button size="sm" (clicked)="onAddToCart()"> ADD TO CART </app-button>
+      <app-button size="sm" [loading]="adding()" (clicked)="onAddToCart()">
+        ADD TO CART
+      </app-button>
     </div>
   </div>
 </article>

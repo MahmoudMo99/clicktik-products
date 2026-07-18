@@ -55,9 +55,19 @@
           <p>Showing {{ products().length }} of {{ totalProducts() }} products</p>
         </div>
 
+        @if (cartErrorMessage()) {
+          <p class="error-message" role="alert">
+            {{ cartErrorMessage() }}
+          </p>
+        }
+
         <div class="products-grid">
           @for (product of products(); track product.id) {
-            <app-product-card [product]="product" (addToCart)="addProductToCart($event)" />
+            <app-product-card
+              [product]="product"
+              [adding]="addingProductId() === product.id"
+              (addToCart)="addProductToCart($event)"
+            />
           } @empty {
             <p class="muted">No products found.</p>
           }
