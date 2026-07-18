@@ -10,11 +10,10 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
-
+import { LoginCredentials } from '../../../core/auth/auth.models';
 import { AuthService } from '../../../core/auth/auth.service';
 import { Button } from '../../../shared/ui/button/button';
 import { Input } from '../../../shared/ui/input/input';
-
 @Component({
   selector: 'app-login',
   imports: [Button, Input],
@@ -25,22 +24,41 @@ import { Input } from '../../../shared/ui/input/input';
 export class Login {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly destroyRef = inject(DestroyRef);
   private readonly route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
 
-  username = signal('');
-  password = signal('');
-  submitted = signal(false);
-  loading = signal(false);
-  errorMessage = signal('');
+  readonly form = signal<LoginCredentials>({
+    username: '',
+    password: '',
+  });
 
-  usernameError = computed(() =>
-    this.submitted() && !this.username().trim() ? 'Username is required' : '',
+  readonly submitted = signal(false);
+  readonly loading = signal(false);
+  readonly errorMessage = signal('');
+
+  readonly usernameError = computed(() =>
+    this.submitted() && !this.form().username.trim() ? 'Username is required' : '',
   );
 
-  passwordError = computed(() =>
-    this.submitted() && !this.password() ? 'Password is required' : '',
+  readonly passwordError = computed(() =>
+    this.submitted() && !this.form().password ? 'Password is required' : '',
   );
+
+  readonly isFormInvalid = computed(() => Boolean(this.usernameError() || this.passwordError()));
+
+  updateUsername(username: string): void {
+    this.form.update((form) => ({
+      ...form,
+      username,
+    }));
+  }
+
+  updatePassword(password: string): void {
+    this.form.update((form) => ({
+      ...form,
+      password,
+    }));
+  }
 
   onSubmit(event: SubmitEvent): void {
     event.preventDefault();
@@ -48,7 +66,7 @@ export class Login {
     this.submitted.set(true);
     this.errorMessage.set('');
 
-    if (this.usernameError() || this.passwordError()) {
+    if (this.isFormInvalid()) {
       return;
     }
 
@@ -56,8 +74,8 @@ export class Login {
 
     this.authService
       .login({
-        username: this.username().trim(),
-        password: this.password(),
+        username: this.form().username.trim(),
+        password: this.form().password,
       })
       .pipe(
         takeUntilDestroyed(this.destroyRef),
@@ -66,6 +84,7 @@ export class Login {
       .subscribe({
         next: () => {
           const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/products';
+
           void this.router.navigateByUrl(returnUrl);
         },
         error: (error: unknown) => {
@@ -78,6 +97,7 @@ export class Login {
     if (error instanceof HttpErrorResponse && error.status === 400) {
       return 'Invalid username or password.';
     }
+
     return 'Something went wrong. Please try again.';
   }
 }

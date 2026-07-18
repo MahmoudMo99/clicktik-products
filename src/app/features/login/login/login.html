@@ -16,10 +16,10 @@
         id="username"
         label="Username"
         placeholder="Enter your username"
-        [value]="username()"
+        [value]="form().username"
         [error]="usernameError()"
         [disabled]="loading()"
-        (valueChange)="username.set($event)"
+        (valueChange)="updateUsername($event)"
       />
 
       <app-input
@@ -27,10 +27,10 @@
         label="Password"
         type="password"
         placeholder="Enter your password"
-        [value]="password()"
+        [value]="form().password"
         [error]="passwordError()"
         [disabled]="loading()"
-        (valueChange)="password.set($event)"
+        (valueChange)="updatePassword($event)"
       />
 
       <app-button type="submit" size="lg" [fullWidth]="true" [loading]="loading()">
