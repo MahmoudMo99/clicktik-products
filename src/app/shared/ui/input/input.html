@@ -1,0 +1,26 @@
+<div class="field">
+  @if (label()) {
+    <label class="label" [for]="id()">
+      {{ label() }}
+    </label>
+  }
+
+  <input
+    class="input"
+    [class.input-error]="hasError()"
+    [id]="id()"
+    [type]="type()"
+    [value]="value()"
+    [placeholder]="placeholder()"
+    [disabled]="disabled()"
+    [attr.aria-invalid]="hasError()"
+    [attr.aria-describedby]="hasError() ? errorId() : null"
+    (input)="onInput($event)"
+  />
+
+  @if (hasError()) {
+    <p class="error-message" [id]="errorId()">
+      {{ error() }}
+    </p>
+  }
+</div>
