@@ -22,6 +22,7 @@ import {
 import { Product, ProductsResponse } from '../../../core/models/product.models';
 import { ProductsService } from '../../../core/products/products.service';
 import { Input } from '../../../shared/ui/input/input';
+import { ProductCard } from '../../../shared/ui/product-card/product-card';
 
 const PAGE_SIZE = 12;
 
@@ -50,7 +51,7 @@ const LOADING_STATE: ProductsState = {
 
 @Component({
   selector: 'app-products',
-  imports: [Input],
+  imports: [Input, ProductCard],
   templateUrl: './products.html',
   styleUrl: './products.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -199,5 +200,9 @@ export class Products {
     const parsedPage = Number(page);
 
     return Number.isInteger(parsedPage) && parsedPage > 0 ? parsedPage : 1;
+  }
+
+  addProductToCart(productId: number): void {
+    console.log('Add product to cart:', productId);
   }
 }

@@ -1,0 +1,21 @@
+<article class="product-card">
+  <div class="image-wrapper">
+    <img [src]="product().thumbnail" [alt]="product().title" />
+  </div>
+
+  <div class="content">
+    <p class="category">{{ product().category }}</p>
+
+    <h2>{{ product().title }}</h2>
+
+    <p class="description">
+      {{ product().description }}
+    </p>
+
+    <div class="footer">
+      <p class="price">${{ product().price }}</p>
+
+      <app-button size="sm" (clicked)="onAddToCart()"> ADD TO CART </app-button>
+    </div>
+  </div>
+</article>

@@ -57,15 +57,7 @@
 
         <div class="products-grid">
           @for (product of products(); track product.id) {
-            <article class="product-card">
-              <img [src]="product.thumbnail" [alt]="product.title" />
-
-              <div class="product-info">
-                <p class="product-category">{{ product.category }}</p>
-                <h2>{{ product.title }}</h2>
-                <p class="product-price">${{ product.price }}</p>
-              </div>
-            </article>
+            <app-product-card [product]="product" (addToCart)="addProductToCart($event)" />
           } @empty {
             <p class="muted">No products found.</p>
           }
