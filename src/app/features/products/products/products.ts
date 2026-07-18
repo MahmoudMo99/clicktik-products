@@ -22,6 +22,7 @@ import {
 import { Product, ProductsResponse } from '../../../core/models/product.models';
 import { ProductsService } from '../../../core/products/products.service';
 import { Input } from '../../../shared/ui/input/input';
+import { Pagination } from '../../../shared/ui/pagination/pagination';
 import { ProductCard } from '../../../shared/ui/product-card/product-card';
 
 const PAGE_SIZE = 12;
@@ -51,7 +52,7 @@ const LOADING_STATE: ProductsState = {
 
 @Component({
   selector: 'app-products',
-  imports: [Input, ProductCard],
+  imports: [Input, ProductCard, Pagination],
   templateUrl: './products.html',
   styleUrl: './products.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -126,10 +127,6 @@ export class Products {
   });
 
   readonly totalPages = computed(() => Math.max(1, Math.ceil(this.totalProducts() / PAGE_SIZE)));
-
-  readonly pages = computed(() =>
-    Array.from({ length: this.totalPages() }, (_, index) => index + 1),
-  );
 
   constructor() {
     toObservable(this.searchTerm)

@@ -1,0 +1,31 @@
+<nav class="pagination" aria-label="Products pagination">
+  <button
+    type="button"
+    class="page-button page-text"
+    [disabled]="isFirstPage()"
+    (click)="goToPage(currentPage() - 1)"
+  >
+    Previous
+  </button>
+
+  @for (page of pages(); track page) {
+    <button
+      type="button"
+      class="page-button"
+      [class.active]="currentPage() === page"
+      [attr.aria-current]="currentPage() === page ? 'page' : null"
+      (click)="goToPage(page)"
+    >
+      {{ page }}
+    </button>
+  }
+
+  <button
+    type="button"
+    class="page-button page-text"
+    [disabled]="isLastPage()"
+    (click)="goToPage(currentPage() + 1)"
+  >
+    Next
+  </button>
+</nav>

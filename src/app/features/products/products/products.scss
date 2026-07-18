@@ -89,31 +89,8 @@
   color: var(--color-danger);
 }
 
-.pagination {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-  justify-content: center;
+.products-pagination {
   margin-top: var(--space-8);
-}
-
-.pagination button {
-  min-width: 40px;
-  min-height: 40px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  color: var(--color-text-body);
-}
-
-.pagination button.active {
-  border-color: var(--color-primary);
-  background: var(--color-primary);
-  color: var(--color-surface);
-}
-
-.pagination button:disabled {
-  opacity: 0.5;
 }
 
 @media (max-width: 960px) {

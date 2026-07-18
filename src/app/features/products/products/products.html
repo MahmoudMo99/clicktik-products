@@ -63,34 +63,13 @@
           }
         </div>
 
-        <nav class="pagination" aria-label="Products pagination">
-          <button
-            type="button"
-            [disabled]="query().page === 1"
-            (click)="goToPage(query().page - 1)"
-          >
-            Previous
-          </button>
-
-          @for (page of pages(); track page) {
-            <button
-              type="button"
-              [class.active]="query().page === page"
-              [attr.aria-current]="query().page === page ? 'page' : null"
-              (click)="goToPage(page)"
-            >
-              {{ page }}
-            </button>
-          }
-
-          <button
-            type="button"
-            [disabled]="query().page === totalPages()"
-            (click)="goToPage(query().page + 1)"
-          >
-            Next
-          </button>
-        </nav>
+        <div class="products-pagination">
+          <app-pagination
+            [currentPage]="query().page"
+            [totalPages]="totalPages()"
+            (pageChange)="goToPage($event)"
+          />
+        </div>
       }
     </section>
   </div>
