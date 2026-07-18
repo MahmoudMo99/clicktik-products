@@ -1,1 +1,105 @@
-<p>products works!</p>
+<section class="products-page">
+  <div class="products-header">
+    <div>
+      <h1>Products</h1>
+      <p>Browse and search products from ClickTik.</p>
+    </div>
+
+    <app-input
+      id="products-search"
+      type="search"
+      placeholder="Search products"
+      [value]="searchTerm()"
+      (valueChange)="searchTerm.set($event)"
+    />
+  </div>
+
+  <div class="products-layout">
+    <aside class="sidebar" aria-label="Product categories">
+      <h2>Categories</h2>
+
+      <button
+        type="button"
+        class="category-button"
+        [class.active]="!query().category"
+        (click)="selectCategory('')"
+      >
+        All
+      </button>
+
+      @for (category of categories(); track category.slug) {
+        <button
+          type="button"
+          class="category-button"
+          [class.active]="query().category === category.slug"
+          (click)="selectCategory(category.slug)"
+        >
+          {{ category.name }}
+        </button>
+      } @empty {
+        <p class="muted">No categories found.</p>
+      }
+    </aside>
+
+    <section class="products-content" aria-live="polite">
+      @let state = productsState();
+
+      @if (state.status === 'loading') {
+        <p class="muted">Loading products...</p>
+      } @else if (state.status === 'error') {
+        <p class="error-message">
+          {{ state.message }}
+        </p>
+      } @else {
+        <div class="products-summary">
+          <p>Showing {{ products().length }} of {{ totalProducts() }} products</p>
+        </div>
+
+        <div class="products-grid">
+          @for (product of products(); track product.id) {
+            <article class="product-card">
+              <img [src]="product.thumbnail" [alt]="product.title" />
+
+              <div class="product-info">
+                <p class="product-category">{{ product.category }}</p>
+                <h2>{{ product.title }}</h2>
+                <p class="product-price">${{ product.price }}</p>
+              </div>
+            </article>
+          } @empty {
+            <p class="muted">No products found.</p>
+          }
+        </div>
+
+        <nav class="pagination" aria-label="Products pagination">
+          <button
+            type="button"
+            [disabled]="query().page === 1"
+            (click)="goToPage(query().page - 1)"
+          >
+            Previous
+          </button>
+
+          @for (page of pages(); track page) {
+            <button
+              type="button"
+              [class.active]="query().page === page"
+              [attr.aria-current]="query().page === page ? 'page' : null"
+              (click)="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+          }
+
+          <button
+            type="button"
+            [disabled]="query().page === totalPages()"
+            (click)="goToPage(query().page + 1)"
+          >
+            Next
+          </button>
+        </nav>
+      }
+    </section>
+  </div>
+</section>
