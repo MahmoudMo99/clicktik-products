@@ -18,6 +18,11 @@ export interface LoginResponse extends AuthUser {
   refreshToken: string;
 }
 
+export interface RefreshTokenResponse {
+  accessToken: string;
+  refreshToken?: string;
+}
+
 export interface AuthSession {
   user: AuthUser;
   accessToken: string;

@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { map, Observable, tap } from 'rxjs';
-
+import { map, Observable, tap, throwError } from 'rxjs';
 import { API_BASE_URL } from '../http/api.config';
-import { AuthSession, LoginCredentials, LoginResponse } from './auth.models';
+import { AuthSession, LoginCredentials, LoginResponse, RefreshTokenResponse } from './auth.models';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +33,34 @@ export class AuthService {
       )
       .pipe(
         map((response) => this.createSession(response)),
+        tap((session) => this.saveSession(session)),
+      );
+  }
+
+  refreshAccessToken(): Observable<AuthSession> {
+    const currentSession = this.session();
+
+    if (!currentSession?.refreshToken) {
+      return throwError(() => new Error('No refresh token available.'));
+    }
+
+    return this.http
+      .post<RefreshTokenResponse>(
+        `${API_BASE_URL}/auth/refresh`,
+        {
+          refreshToken: currentSession.refreshToken,
+          expiresInMins: 30,
+        },
+        {
+          withCredentials: true,
+        },
+      )
+      .pipe(
+        map((response) => ({
+          ...currentSession,
+          accessToken: response.accessToken,
+          refreshToken: response.refreshToken ?? currentSession.refreshToken,
+        })),
         tap((session) => this.saveSession(session)),
       );
   }
