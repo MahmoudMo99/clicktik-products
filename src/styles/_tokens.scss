@@ -16,6 +16,8 @@
   --color-danger: #dc2626;
   --color-success: #16a34a;
 
+  --skeleton-background: color-mix(in srgb, var(--color-border) 45%, var(--color-surface));
+
   --font-family-base: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   --font-size-heading-lg: 1.875rem; /* 30px */

@@ -23,9 +23,11 @@ import {
 import { CartService } from '../../../core/cart/cart.service';
 import { Product, ProductsResponse } from '../../../core/models/product.models';
 import { ProductsService } from '../../../core/products/products.service';
+import { EmptyState } from '../../../shared/ui/empty-state/empty-state';
 import { Input } from '../../../shared/ui/input/input';
 import { Pagination } from '../../../shared/ui/pagination/pagination';
 import { ProductCard } from '../../../shared/ui/product-card/product-card';
+import { ProductSkeleton } from '../../../shared/ui/product-skeleton/product-skeleton';
 
 const PAGE_SIZE = 12;
 
@@ -54,7 +56,7 @@ const LOADING_STATE: ProductsState = {
 
 @Component({
   selector: 'app-products',
-  imports: [Input, ProductCard, Pagination],
+  imports: [Input, ProductCard, Pagination, EmptyState, ProductSkeleton],
   templateUrl: './products.html',
   styleUrl: './products.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

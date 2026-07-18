@@ -1,0 +1,18 @@
+<div class="skeleton-grid" role="status" aria-label="Loading products">
+  @for (item of items(); track item) {
+    <article class="skeleton-card">
+      <div class="skeleton-image"></div>
+
+      <div class="skeleton-content">
+        <span class="skeleton-line small"></span>
+        <span class="skeleton-line"></span>
+        <span class="skeleton-line short"></span>
+
+        <div class="skeleton-footer">
+          <span class="skeleton-line price"></span>
+          <span class="skeleton-button"></span>
+        </div>
+      </div>
+    </article>
+  }
+</div>

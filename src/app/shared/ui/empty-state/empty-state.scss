@@ -1,0 +1,42 @@
+:host {
+  display: block;
+}
+
+.empty-state {
+  display: grid;
+  place-items: center;
+  gap: var(--space-4);
+  min-height: 260px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  padding: var(--space-8);
+  text-align: center;
+}
+
+.icon {
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--radius-pill);
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 1.5rem;
+}
+
+.text {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.text h2 {
+  color: var(--color-text-heading);
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+}
+
+.text p {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}

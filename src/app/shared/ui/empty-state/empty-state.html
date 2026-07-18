@@ -1,0 +1,11 @@
+<section class="empty-state" role="status">
+  <div class="icon" aria-hidden="true">😔</div>
+
+  <div class="text">
+    <h2>{{ title() }}</h2>
+
+    @if (description()) {
+      <p>{{ description() }}</p>
+    }
+  </div>
+</section>

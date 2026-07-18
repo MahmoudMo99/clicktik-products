@@ -93,6 +93,10 @@
   margin-top: var(--space-8);
 }
 
+.products-grid app-empty-state {
+  grid-column: 1 / -1;
+}
+
 @media (max-width: 960px) {
   .products-header,
   .products-layout {

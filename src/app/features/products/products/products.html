@@ -45,7 +45,7 @@
       @let state = productsState();
 
       @if (state.status === 'loading') {
-        <p class="muted">Loading products...</p>
+        <app-product-skeleton [count]="12" />
       } @else if (state.status === 'error') {
         <p class="error-message">
           {{ state.message }}
@@ -69,7 +69,10 @@
               (addToCart)="addProductToCart($event)"
             />
           } @empty {
-            <p class="muted">No products found.</p>
+            <app-empty-state
+              title="No products found"
+              description="Try changing your search term or selected category."
+            />
           }
         </div>
 
