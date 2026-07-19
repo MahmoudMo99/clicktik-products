@@ -24,6 +24,9 @@ export interface ProductCategory {
   name: string;
   url: string;
 }
+export interface ProductCategoryWithCount extends ProductCategory {
+  count: number;
+}
 
 export interface ProductsQuery {
   page: number;

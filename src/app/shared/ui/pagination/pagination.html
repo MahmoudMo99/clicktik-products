@@ -1,31 +1,45 @@
 <nav class="pagination" aria-label="Products pagination">
   <button
     type="button"
-    class="page-button page-text"
+    class="page-button arrow-button"
+    aria-label="Previous page"
     [disabled]="isFirstPage()"
     (click)="goToPage(currentPage() - 1)"
   >
-    Previous
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M15 5L8 12L15 19" />
+    </svg>
   </button>
 
-  @for (page of pages(); track page) {
-    <button
-      type="button"
-      class="page-button"
-      [class.active]="currentPage() === page"
-      [attr.aria-current]="currentPage() === page ? 'page' : null"
-      (click)="goToPage(page)"
-    >
-      {{ page }}
-    </button>
+  @for (item of items(); track item.id) {
+    @switch (item.type) {
+      @case ('ellipsis') {
+        <span class="ellipsis" aria-hidden="true"> ... </span>
+      }
+
+      @case ('page') {
+        <button
+          type="button"
+          class="page-button"
+          [class.active]="currentPage() === item.page"
+          [attr.aria-current]="currentPage() === item.page ? 'page' : null"
+          (click)="goToPage(item.page)"
+        >
+          {{ item.page }}
+        </button>
+      }
+    }
   }
 
   <button
     type="button"
-    class="page-button page-text"
+    class="page-button arrow-button"
+    aria-label="Next page"
     [disabled]="isLastPage()"
     (click)="goToPage(currentPage() + 1)"
   >
-    Next
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M9 5L16 12L9 19" />
+    </svg>
   </button>
 </nav>

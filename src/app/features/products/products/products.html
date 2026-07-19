@@ -1,10 +1,18 @@
 <section class="products-page">
-  <div class="products-header">
-    <div>
-      <h1>Products</h1>
-      <p>Home / Products</p>
-    </div>
-  </div>
+  <header class="page-heading">
+    <h1>{{ pageTitle() }}</h1>
+
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      @for (item of breadcrumbItems(); track item; let last = $last) {
+        @if (!last) {
+          <span>{{ item }}</span>
+          <span aria-hidden="true">/</span>
+        } @else {
+          <strong>{{ item }}</strong>
+        }
+      }
+    </nav>
+  </header>
 
   <div class="mobile-category-filter">
     <app-select
@@ -18,29 +26,33 @@
 
   <div class="products-layout">
     <aside class="sidebar" aria-label="Product categories">
-      <h2>Categories</h2>
+      <h2>Products</h2>
 
-      <button
-        type="button"
-        class="category-button"
-        [class.active]="!query().category"
-        (click)="selectCategory('')"
-      >
-        All
-      </button>
-
-      @for (category of categories(); track category.slug) {
+      <div class="category-list">
         <button
           type="button"
           class="category-button"
-          [class.active]="query().category === category.slug"
-          (click)="selectCategory(category.slug)"
+          [class.active]="!query().category"
+          (click)="selectCategory('')"
         >
-          {{ category.name }}
+          <span class="radio-dot" aria-hidden="true"></span>
+          <span>All ({{ allProductsCount() }})</span>
         </button>
-      } @empty {
-        <p class="muted">No categories found.</p>
-      }
+
+        @for (category of categories(); track category.slug) {
+          <button
+            type="button"
+            class="category-button"
+            [class.active]="query().category === category.slug"
+            (click)="selectCategory(category.slug)"
+          >
+            <span class="radio-dot" aria-hidden="true"></span>
+            <span>{{ category.name }} ({{ category.count }})</span>
+          </button>
+        } @empty {
+          <p class="muted">No categories found.</p>
+        }
+      </div>
     </aside>
 
     <section class="products-content" aria-live="polite">
@@ -53,8 +65,13 @@
           {{ state.message }}
         </p>
       } @else {
-        <div class="products-summary">
-          <p>Showing {{ products().length }} of {{ totalProducts() }} products</p>
+        <div class="products-toolbar">
+          <p>{{ productsFoundLabel() }}</p>
+
+          <p>
+            <strong>Sort By:</strong>
+            <span>Popularity</span>
+          </p>
         </div>
 
         @if (cartErrorMessage()) {

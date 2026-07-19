@@ -62,13 +62,41 @@ export class Products {
   readonly addingProductId = this.cartService.addingProductId;
   readonly cartErrorMessage = signal('');
 
+  readonly pageTitle = computed(() => {
+    const search = this.query().search;
+    const category = this.query().category;
+
+    if (search) {
+      return search;
+    }
+
+    if (category) {
+      return this.formatCategoryName(category);
+    }
+
+    return 'Products';
+  });
+
+  readonly breadcrumbItems = computed(() => {
+    const title = this.pageTitle();
+
+    return title === 'Products' ? ['Home', 'Products'] : ['Home', 'Products', title];
+  });
+
+  readonly productsFoundLabel = computed(() => {
+    const total = this.totalProducts();
+    const label = total === 1 ? 'Product Found' : 'Products Found';
+
+    return `(${total}) ${label}`;
+  });
+
   readonly categoryOptions = computed<SelectOption[]>(() => [
     {
-      label: 'All categories',
+      label: `All (${this.allProductsCount()})`,
       value: '',
     },
     ...this.categories().map((category) => ({
-      label: category.name,
+      label: `${category.name} (${category.count})`,
       value: category.slug,
     })),
   ]);
@@ -93,9 +121,19 @@ export class Products {
   });
 
   readonly categories = toSignal(
-    this.productsService.getCategories().pipe(catchError(() => of([]))),
+    this.productsService.getCategoriesWithCounts().pipe(catchError(() => of([]))),
     {
       initialValue: [],
+    },
+  );
+
+  readonly allProductsCount = toSignal(
+    this.productsService.getProducts({ page: 1, limit: 1 }).pipe(
+      map((response) => response.total),
+      catchError(() => of(0)),
+    ),
+    {
+      initialValue: 0,
     },
   );
 
@@ -191,5 +229,12 @@ export class Products {
           this.cartErrorMessage.set('Could not add product to cart.');
         },
       });
+  }
+
+  private formatCategoryName(category: string): string {
+    return category
+      .split('-')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   }
 }

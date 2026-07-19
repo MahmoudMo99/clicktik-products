@@ -5,39 +5,71 @@
 .pagination {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-2);
+  align-items: center;
   justify-content: center;
+  gap: var(--pagination-gap);
+}
+
+.page-button,
+.ellipsis {
+  width: var(--pagination-item-size);
+  height: var(--pagination-item-size);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--pagination-radius);
+  font-size: var(--font-size-body);
+  line-height: 1;
 }
 
 .page-button {
-  min-width: 40px;
-  min-height: 40px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border: 1px solid var(--pagination-border-color);
   background: var(--color-surface);
-  color: var(--color-text-body);
+  color: var(--color-text-heading);
   font-weight: var(--font-weight-medium);
+  box-shadow: var(--pagination-shadow);
   transition:
     background-color var(--transition-fast),
     border-color var(--transition-fast),
-    color var(--transition-fast);
+    color var(--transition-fast),
+    opacity var(--transition-fast);
 }
 
 .page-button:not(:disabled):hover {
   border-color: var(--color-primary);
-  color: var(--color-primary);
 }
 
 .page-button.active {
-  border-color: var(--color-primary);
+  border-color: var(--pagination-border-color);
   background: var(--color-primary);
-  color: var(--color-surface);
+  color: var(--color-primary-text);
 }
 
 .page-button:disabled {
-  opacity: 0.5;
+  color: var(--pagination-disabled-color);
+  opacity: 1;
 }
 
-.page-text {
-  padding-inline: var(--space-4);
+.arrow-button {
+  color: var(--pagination-arrow-color);
+}
+
+.arrow-button svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.arrow-button:disabled {
+  color: var(--pagination-disabled-color);
+}
+
+.ellipsis {
+  color: var(--color-text-heading);
+  font-weight: var(--font-weight-medium);
+  user-select: none;
 }

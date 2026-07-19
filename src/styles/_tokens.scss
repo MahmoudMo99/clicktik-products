@@ -61,6 +61,14 @@
   --footer-height: 128px;
   --sidebar-width: 260px;
 
+  --products-content-top-space: 72px;
+  --products-title-bottom-space: 48px;
+  --products-layout-gap: 32px;
+  --products-sidebar-width: 280px;
+  --products-sidebar-radius: 8px;
+  --products-sidebar-padding: 20px;
+  --products-grid-gap: 24px;
+
   --login-main-height: 833px;
   --login-form-width: 360px;
   --login-content-top-space: 104px;
@@ -79,6 +87,14 @@
   --button-lg-padding-block: 10px;
   --button-lg-padding-inline: 18px;
   --button-gap: var(--space-2);
+
+  --pagination-item-size: 32px;
+  --pagination-gap: 18px;
+  --pagination-radius: var(--radius-md);
+  --pagination-border-color: #f6f6f6;
+  --pagination-shadow: 0 7px 64px rgb(0 0 0 / 0.07);
+  --pagination-arrow-color: #2d254c;
+  --pagination-disabled-color: #d0d5dd;
 
   --letter-spacing-tight: -0.02em;
 

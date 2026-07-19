@@ -1,9 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
 
 import { API_BASE_URL } from '../http/api.config';
-import { ProductCategory, ProductsQuery, ProductsResponse } from '../models/product.models';
+import {
+  ProductCategory,
+  ProductCategoryWithCount,
+  ProductsQuery,
+  ProductsResponse,
+} from '../models/product.models';
 
 @Injectable({
   providedIn: 'root',
@@ -35,6 +40,36 @@ export class ProductsService {
 
   getCategories(): Observable<ProductCategory[]> {
     return this.http.get<ProductCategory[]>(`${this.productsUrl}/categories`);
+  }
+
+  getCategoriesWithCounts(): Observable<ProductCategoryWithCount[]> {
+    return this.getCategories().pipe(
+      switchMap((categories) => {
+        if (!categories.length) {
+          return of([]);
+        }
+
+        return forkJoin(
+          categories.map((category) =>
+            this.getProductsByCategory(category.slug, {
+              page: 1,
+              limit: 1,
+            }).pipe(
+              map((response) => ({
+                ...category,
+                count: response.total,
+              })),
+              catchError(() =>
+                of({
+                  ...category,
+                  count: 0,
+                }),
+              ),
+            ),
+          ),
+        );
+      }),
+    );
   }
 
   private getPaginationParams(query: ProductsQuery): Record<string, number> {
