@@ -1,0 +1,152 @@
+:host {
+  display: block;
+}
+
+.header {
+  min-height: var(--header-height);
+  border-bottom: 1px solid var(--color-header-border);
+  background: var(--color-header-background);
+}
+
+.header-content {
+  width: min(100% - (var(--space-4) * 2), var(--container-max-width));
+  min-height: var(--header-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-inline: auto;
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.header-left {
+  gap: 5rem;
+}
+
+.header-right {
+  gap: var(--space-5);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: #000000;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+}
+
+.logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.nav-link,
+.login-link,
+.account-button {
+  color: #667085;
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-medium);
+}
+
+.account-button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+}
+
+.search-box {
+  width: 320px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-input-background);
+  padding-inline: var(--space-3);
+}
+
+.search-box:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 14%, transparent);
+}
+
+.search-icon {
+  width: 18px;
+  height: 18px;
+  color: #98a2b3;
+}
+
+.search-icon svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  fill: currentColor;
+}
+
+.search-box input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--color-text-heading);
+  font-size: var(--font-size-sm);
+}
+
+.search-box input::placeholder {
+  color: #98a2b3;
+}
+
+.sr-only {
+  width: 1px;
+  height: 1px;
+  position: absolute;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .header-left {
+    gap: var(--space-6);
+  }
+
+  .search-box {
+    width: 240px;
+  }
+}
+
+@media (max-width: 720px) {
+  .header-content {
+    gap: var(--space-4);
+  }
+
+  .nav-link {
+    display: none;
+  }
+
+  .search-box {
+    width: 180px;
+  }
+}
+
+@media (max-width: 560px) {
+  .header-right {
+    gap: var(--space-3);
+  }
+
+  .search-box {
+    display: none;
+  }
+
+  .brand-name {
+    font-size: var(--font-size-sm);
+  }
+}

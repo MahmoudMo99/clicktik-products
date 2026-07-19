@@ -1,15 +1,15 @@
 <div class="page">
-  <header class="header">
-    <a class="brand" href="/" aria-label="ClickTik home"> ClickTik </a>
-
-    @if (isAuthenticated()) {
-      <app-cart-badge [count]="cartCount()" />
-    }
-  </header>
+  <app-header
+    [isAuthenticated]="isAuthenticated()"
+    [cartCount]="cartCount()"
+    [searchValue]="headerSearch()"
+    (searchValueChange)="updateHeaderSearch($event)"
+    (logoutClicked)="logout()"
+  />
 
   <main class="main">
     <router-outlet />
   </main>
 
-  <footer class="footer">© 2026 ClickTik. All rights reserved.</footer>
+  <app-footer />
 </div>

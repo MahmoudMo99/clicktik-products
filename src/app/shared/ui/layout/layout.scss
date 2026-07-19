@@ -10,32 +10,6 @@
   background: var(--color-page-background);
 }
 
-.header,
-.footer {
-  min-height: var(--header-height);
-  display: flex;
-  align-items: center;
-  padding-inline: var(--space-8);
-  background: var(--color-header-background);
-}
-.header {
-  justify-content: space-between;
-}
-.footer {
-  justify-content: center;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-}
-
-.brand {
-  color: var(--color-text-heading);
-  font-size: 1.25rem;
-  font-weight: var(--font-weight-bold);
-}
-
-@media (max-width: 640px) {
-  .header,
-  .footer {
-    padding-inline: var(--space-4);
-  }
+.main {
+  min-width: 0;
 }

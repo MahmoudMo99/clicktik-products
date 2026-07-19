@@ -1,0 +1,44 @@
+<header class="header">
+  <div class="header-content">
+    <div class="header-left">
+      <a class="brand" routerLink="/products" aria-label="ClickTik home">
+        <img class="logo" src="/clicktik-logo.svg" alt="" width="32" height="32" />
+
+        <span class="brand-name">ClickTik</span>
+      </a>
+
+      <a class="nav-link" routerLink="/products"> Home </a>
+    </div>
+
+    @if (isAuthenticated()) {
+      <div class="header-right">
+        <label class="search-box">
+          <span class="search-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" focusable="false">
+              <path
+                d="M10.75 4.5a6.25 6.25 0 0 1 4.95 10.06l3.12 3.12a.8.8 0 0 1-1.14 1.14l-3.12-3.12A6.25 6.25 0 1 1 10.75 4.5Zm0 1.6a4.65 4.65 0 1 0 0 9.3 4.65 4.65 0 0 0 0-9.3Z"
+              />
+            </svg>
+          </span>
+
+          <span class="sr-only">Search products</span>
+
+          <input
+            type="search"
+            placeholder="Search"
+            [value]="searchValue()"
+            (input)="onSearchInput($event)"
+          />
+        </label>
+
+        <app-cart-badge [count]="cartCount()" />
+
+        <button type="button" class="account-button" title="Log out" (click)="onLogoutClick()">
+          Account
+        </button>
+      </div>
+    } @else {
+      <a class="login-link" routerLink="/login"> Log in </a>
+    }
+  </div>
+</header>

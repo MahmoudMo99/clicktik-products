@@ -4,27 +4,16 @@ import {
   computed,
   DestroyRef,
   inject,
-  linkedSignal,
   signal,
 } from '@angular/core';
-import { takeUntilDestroyed, toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  catchError,
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  Observable,
-  of,
-  startWith,
-  switchMap,
-} from 'rxjs';
+import { catchError, distinctUntilChanged, map, Observable, of, startWith, switchMap } from 'rxjs';
 
 import { CartService } from '../../../core/cart/cart.service';
 import { Product, ProductsResponse } from '../../../core/models/product.models';
 import { ProductsService } from '../../../core/products/products.service';
 import { EmptyState } from '../../../shared/ui/empty-state/empty-state';
-import { Input } from '../../../shared/ui/input/input';
 import { Pagination } from '../../../shared/ui/pagination/pagination';
 import { ProductCard } from '../../../shared/ui/product-card/product-card';
 import { ProductSkeleton } from '../../../shared/ui/product-skeleton/product-skeleton';
@@ -57,7 +46,7 @@ const LOADING_STATE: ProductsState = {
 
 @Component({
   selector: 'app-products',
-  imports: [Input, Select, ProductCard, Pagination, EmptyState, ProductSkeleton],
+  imports: [Select, ProductCard, Pagination, EmptyState, ProductSkeleton],
   templateUrl: './products.html',
   styleUrl: './products.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -103,8 +92,6 @@ export class Products {
     initialValue: DEFAULT_QUERY,
   });
 
-  readonly searchTerm = linkedSignal(() => this.query().search);
-
   readonly categories = toSignal(
     this.productsService.getCategories().pipe(catchError(() => of([]))),
     {
@@ -149,34 +136,7 @@ export class Products {
 
   readonly totalPages = computed(() => Math.max(1, Math.ceil(this.totalProducts() / PAGE_SIZE)));
 
-  constructor() {
-    toObservable(this.searchTerm)
-      .pipe(
-        debounceTime(400),
-        map((value) => value.trim()),
-        distinctUntilChanged(),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe((search) => {
-        if (search === this.query().search) {
-          return;
-        }
-
-        void this.router.navigate([], {
-          relativeTo: this.route,
-          queryParams: {
-            search: search || null,
-            category: null,
-            page: 1,
-          },
-          queryParamsHandling: 'merge',
-        });
-      });
-  }
-
   selectCategory(categorySlug: string): void {
-    this.searchTerm.set('');
-
     void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {

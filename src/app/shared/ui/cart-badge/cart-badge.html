@@ -1,5 +1,9 @@
 <div class="cart-badge" [attr.aria-label]="'Cart contains ' + count() + ' products'">
-  <span class="cart-icon" aria-hidden="true">🛒</span>
+  <svg class="cart-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+    <path
+      d="M7.2 18.2a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2Zm9.3 0a1.6 1.6 0 1 0 0 3.2 1.6 1.6 0 0 0 0-3.2ZM5.4 5.2l.32 1.68 1.56 8.1c.12.63.68 1.08 1.32 1.08h8.45c.6 0 1.13-.39 1.3-.97l1.65-5.7a1.1 1.1 0 0 0-1.06-1.4H7.62L7.16 5.6A1.35 1.35 0 0 0 5.83 4.5H3.9a.8.8 0 0 0 0 1.6h1.5Z"
+    />
+  </svg>
 
   @if (count() > 0) {
     <span class="cart-count">
