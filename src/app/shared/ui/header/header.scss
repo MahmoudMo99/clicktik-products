@@ -3,14 +3,14 @@
 }
 
 .header {
-  min-height: var(--header-height);
+  height: var(--header-height);
   border-bottom: 1px solid var(--color-header-border);
   background: var(--color-header-background);
 }
 
 .header-content {
   width: min(100% - (var(--space-4) * 2), var(--container-max-width));
-  min-height: var(--header-height);
+  height: var(--header-height);
   display: flex;
   align-items: center;
   justify-content: space-between;

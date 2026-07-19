@@ -2,6 +2,7 @@
   --color-primary: #41cccc;
   --color-primary-hover: #35b8b8;
   --color-primary-soft: #e9fbfb;
+  --color-primary-text: #101828;
 
   --color-page-background: #ffffff;
   --color-header-background: #ffffff;
@@ -22,10 +23,10 @@
 
   --font-family-base: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-  --font-size-heading-lg: 1.875rem; /* 30px */
-  --font-size-body: 1rem; /* 16px */
-  --font-size-sm: 0.875rem; /* 14px */
-  --font-size-xs: 0.75rem; /* 12px */
+  --font-size-heading-lg: 30px; /* 30px */
+  --font-size-body: 16px; /* 16px */
+  --font-size-sm: 14px; /* 14px */
+  --font-size-xs: 12px;
 
   --font-weight-regular: 400;
   --font-weight-medium: 500;
@@ -51,16 +52,35 @@
   --radius-xl: 1rem; /* 16px */
   --radius-pill: 999px;
 
+  --shadow-xs: 0 1px 2px rgb(16 24 40 / 0.05);
   --shadow-sm: 0 1px 2px rgb(16 24 40 / 0.06);
   --shadow-md: 0 8px 24px rgb(16 24 40 / 0.08);
 
   --container-max-width: 1216px;
   --header-height: 80px;
+  --footer-height: 128px;
   --sidebar-width: 260px;
-  --login-card-width: 440px;
+
+  --login-main-height: 833px;
+  --login-form-width: 360px;
+  --login-content-top-space: 104px;
+  --login-logo-size: 48px;
+  --login-logo-bottom-space: 28px;
+  --login-header-gap: var(--space-2);
+  --login-header-bottom-space: var(--space-8);
+  --login-form-gap: 22px;
 
   --control-height: 44px;
   --control-radius: var(--radius-md);
+  --control-padding-block: 10px;
+  --control-padding-inline: 14px;
+
+  --button-lg-height: 44px;
+  --button-lg-padding-block: 10px;
+  --button-lg-padding-inline: 18px;
+  --button-gap: var(--space-2);
+
+  --letter-spacing-tight: -0.02em;
 
   --transition-fast: 160ms ease;
 }

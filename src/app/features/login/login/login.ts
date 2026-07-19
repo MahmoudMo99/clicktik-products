@@ -37,7 +37,7 @@ export class Login {
   readonly errorMessage = signal('');
 
   readonly usernameError = computed(() =>
-    this.submitted() && !this.form().username.trim() ? 'Username is required' : '',
+    this.submitted() && !this.form().username.trim() ? 'Email is required' : '',
   );
 
   readonly passwordError = computed(() =>

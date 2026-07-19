@@ -3,7 +3,7 @@
 }
 
 .footer {
-  min-height: 128px;
+  height: var(--footer-height);
   display: flex;
   align-items: center;
   background: #1f2d3d;

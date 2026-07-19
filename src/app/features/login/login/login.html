@@ -1,7 +1,9 @@
 <section class="login-page">
   <section class="login-card" aria-labelledby="login-title">
+    <img class="login-logo" src="/clicktik-logo.svg" alt="" width="48" height="48" />
+
     <div class="login-card-header">
-      <h1 id="login-title">Login</h1>
+      <h1 id="login-title">Log in to your account</h1>
       <p>Welcome back! Please enter your details.</p>
     </div>
 
@@ -14,8 +16,8 @@
 
       <app-input
         id="username"
-        label="Username"
-        placeholder="Enter your username"
+        label="Email"
+        placeholder="Enter your email"
         [value]="form().username"
         [error]="usernameError()"
         [disabled]="loading()"
@@ -34,7 +36,7 @@
       />
 
       <app-button type="submit" size="lg" [fullWidth]="true" [loading]="loading()">
-        Login
+        Sign in
       </app-button>
     </form>
   </section>
