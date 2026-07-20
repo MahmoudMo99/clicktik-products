@@ -1,22 +1,24 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { map, Observable, tap, throwError } from 'rxjs';
+
 import { API_BASE_URL } from '../http/api.config';
 import { AuthSession, LoginCredentials, LoginResponse, RefreshTokenResponse } from './auth.models';
+
+const AUTH_STORAGE_KEY = 'clicktik-auth-session';
+const TOKEN_EXPIRES_IN_MINUTES = 30;
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private readonly http = inject(HttpClient);
-  private readonly storageKey = 'clicktik-auth-session';
-
   private readonly session = signal<AuthSession | null>(this.getStoredSession());
 
-  user = computed(() => this.session()?.user ?? null);
-  accessToken = computed(() => this.session()?.accessToken ?? null);
-  refreshToken = computed(() => this.session()?.refreshToken ?? null);
-  isAuthenticated = computed(() => Boolean(this.accessToken()));
+  readonly user = computed(() => this.session()?.user ?? null);
+  readonly accessToken = computed(() => this.session()?.accessToken ?? null);
+  readonly refreshToken = computed(() => this.session()?.refreshToken ?? null);
+  readonly isAuthenticated = computed(() => Boolean(this.accessToken()));
 
   login(credentials: LoginCredentials): Observable<AuthSession> {
     return this.http
@@ -25,7 +27,7 @@ export class AuthService {
         {
           username: credentials.username,
           password: credentials.password,
-          expiresInMins: 30,
+          expiresInMins: TOKEN_EXPIRES_IN_MINUTES,
         },
         {
           withCredentials: true,
@@ -49,7 +51,7 @@ export class AuthService {
         `${API_BASE_URL}/auth/refresh`,
         {
           refreshToken: currentSession.refreshToken,
-          expiresInMins: 30,
+          expiresInMins: TOKEN_EXPIRES_IN_MINUTES,
         },
         {
           withCredentials: true,
@@ -67,7 +69,7 @@ export class AuthService {
 
   logout(): void {
     this.session.set(null);
-    localStorage.removeItem(this.storageKey);
+    localStorage.removeItem(AUTH_STORAGE_KEY);
   }
 
   private createSession(response: LoginResponse): AuthSession {
@@ -82,21 +84,44 @@ export class AuthService {
 
   private saveSession(session: AuthSession): void {
     this.session.set(session);
-    localStorage.setItem(this.storageKey, JSON.stringify(session));
+    localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(session));
   }
 
   private getStoredSession(): AuthSession | null {
-    const storedSession = localStorage.getItem(this.storageKey);
+    const storedSession = localStorage.getItem(AUTH_STORAGE_KEY);
 
     if (!storedSession) {
       return null;
     }
 
     try {
-      return JSON.parse(storedSession) as AuthSession;
+      const parsedSession: unknown = JSON.parse(storedSession);
+
+      if (isAuthSession(parsedSession)) {
+        return parsedSession;
+      }
+
+      localStorage.removeItem(AUTH_STORAGE_KEY);
+      return null;
     } catch {
-      localStorage.removeItem(this.storageKey);
+      localStorage.removeItem(AUTH_STORAGE_KEY);
       return null;
     }
   }
+}
+
+function isAuthSession(value: unknown): value is AuthSession {
+  if (!value || typeof value !== 'object') {
+    return false;
+  }
+
+  const session = value as Partial<AuthSession>;
+
+  return (
+    typeof session.accessToken === 'string' &&
+    typeof session.refreshToken === 'string' &&
+    Boolean(session.user) &&
+    typeof session.user?.id === 'number' &&
+    typeof session.user?.username === 'string'
+  );
 }
