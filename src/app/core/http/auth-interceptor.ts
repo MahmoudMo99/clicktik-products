@@ -11,23 +11,14 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
   const authService = inject(AuthService);
 
   const token = authService.accessToken();
-  const isApiRequest = request.url.startsWith(API_BASE_URL);
-  const isAuthRequest = AUTH_ENDPOINTS.some((url) => request.url.startsWith(url));
 
-  if (!token || !isApiRequest || isAuthRequest) {
+  if (!shouldAttachToken(request, token)) {
     return next(request);
   }
 
-  const authRequest = addToken(request, token);
-
-  return next(authRequest).pipe(
+  return next(addToken(request, token)).pipe(
     catchError((error: unknown) => {
-      const canRefresh =
-        error instanceof HttpErrorResponse &&
-        error.status === 401 &&
-        Boolean(authService.refreshToken());
-
-      if (!canRefresh) {
+      if (!shouldRefreshToken(error, authService)) {
         return throwError(() => error);
       }
 
@@ -41,6 +32,21 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
     }),
   );
 };
+
+function shouldAttachToken(request: HttpRequest<unknown>, token: string | null): token is string {
+  const isApiRequest = request.url.startsWith(API_BASE_URL);
+  const isAuthRequest = AUTH_ENDPOINTS.some((url) => request.url.startsWith(url));
+
+  return Boolean(token) && isApiRequest && !isAuthRequest;
+}
+
+function shouldRefreshToken(error: unknown, authService: AuthService): boolean {
+  return (
+    error instanceof HttpErrorResponse &&
+    error.status === 401 &&
+    Boolean(authService.refreshToken())
+  );
+}
 
 function addToken(request: HttpRequest<unknown>, token: string): HttpRequest<unknown> {
   return request.clone({
