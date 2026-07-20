@@ -1,6 +1,7 @@
 :host {
   display: block;
-  width: var(--product-card-width);
+  width: 100%;
+  max-width: var(--product-card-width);
 }
 
 .product-card {
@@ -160,4 +161,16 @@
 
 .reviews {
   color: var(--color-text-muted);
+}
+
+@media (max-width: 960px) {
+  :host {
+    max-width: 320px;
+  }
+}
+
+@media (max-width: 640px) {
+  :host {
+    max-width: 100%;
+  }
 }
