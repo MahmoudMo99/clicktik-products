@@ -129,7 +129,7 @@
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, var(--product-card-width));
   gap: var(--products-grid-gap);
 }
 
@@ -168,7 +168,8 @@
   }
 
   .products-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, var(--product-card-width));
+    justify-content: center;
   }
 }
 
@@ -183,6 +184,7 @@
   }
 
   .products-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: var(--product-card-width);
+    justify-content: center;
   }
 }

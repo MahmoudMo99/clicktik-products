@@ -10,6 +10,15 @@ export interface Product {
   brand?: string;
   thumbnail: string;
   images: string[];
+  reviews?: ProductReview[];
+}
+
+export interface ProductReview {
+  rating: number;
+  comment: string;
+  date: string;
+  reviewerName: string;
+  reviewerEmail: string;
 }
 
 export interface ProductsResponse {

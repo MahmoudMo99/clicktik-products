@@ -4,7 +4,6 @@
 
 .button {
   border: 1px solid transparent;
-  border-radius: var(--control-radius);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -47,6 +46,20 @@
   font-size: var(--font-size-body);
 }
 
+.button-xl {
+  min-height: var(--button-xl-height);
+  padding: var(--button-xl-padding-block) var(--button-xl-padding-inline);
+  font-size: var(--font-size-body);
+}
+
+.button-radius-sm {
+  border-radius: var(--button-radius-sm);
+}
+
+.button-radius-md {
+  border-radius: var(--control-radius);
+}
+
 .button-full {
   width: 100%;
 }
@@ -54,7 +67,7 @@
 .button-primary {
   border-color: var(--color-primary);
   background: var(--color-primary);
-  color: var(--color-primary-text);
+  color: var(--button-text-color);
 }
 
 .button-primary:not(:disabled):hover {

@@ -69,6 +69,36 @@
   --products-sidebar-padding: 20px;
   --products-grid-gap: 24px;
 
+  --product-card-width: 282px;
+  --product-card-height: 580px;
+  --product-card-radius: 8px;
+  --product-card-border-width: 1px;
+  --product-card-border-color: rgb(66 66 66 / 0.25);
+
+  --product-image-height: 257px;
+  --product-image-background: #fdf1eb;
+
+  --product-card-padding: 16px;
+  --product-card-content-gap: 12px;
+
+  --discount-badge-width: 71px;
+  --discount-badge-height: 23px;
+  --discount-badge-top: 12px;
+  --discount-badge-left: 13px;
+  --discount-badge-radius: 4px;
+  --discount-badge-font-size: 12px;
+  --discount-badge-font-weight: 700;
+
+  --product-title-font-size: 20px;
+  --product-title-font-weight: 700;
+
+  --product-description-font-size: 14px;
+  --product-description-font-weight: 400;
+
+  --product-meta-font-size: 14px;
+  --product-rating-font-size: 16px;
+  --product-rating-star-color: #f4b000;
+
   --login-main-height: 833px;
   --login-form-width: 360px;
   --login-content-top-space: 104px;
@@ -83,10 +113,15 @@
   --control-padding-block: 10px;
   --control-padding-inline: 14px;
 
+  --button-xl-height: 50px;
+  --button-xl-padding-block: 14px;
+  --button-xl-padding-inline: 18px;
   --button-lg-height: 44px;
   --button-lg-padding-block: 10px;
   --button-lg-padding-inline: 18px;
   --button-gap: var(--space-2);
+  --button-radius-sm: 4px;
+  --button-text-color: #344054;
 
   --pagination-item-size: 32px;
   --pagination-gap: 18px;

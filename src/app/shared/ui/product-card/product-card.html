@@ -1,21 +1,66 @@
 <article class="product-card">
-  <div class="image-wrapper">
+  <div class="image-area">
+    @if (product().discountPercentage > 0) {
+      <span class="discount-badge">
+        {{ discountLabel() }}
+      </span>
+    }
+
     <img [src]="product().thumbnail" [alt]="product().title" />
   </div>
 
   <div class="content">
-    <p class="category">{{ product().category }}</p>
+    <div class="main-info">
+      <h2>{{ product().title }}</h2>
 
-    <h2>{{ product().title }}</h2>
+      <p class="description">
+        {{ product().description }}
+      </p>
 
-    <p class="description">
-      {{ product().description }}
-    </p>
+      <div class="price-row">
+        @if (originalPrice()) {
+          <span class="old-price"> {{ originalPrice() }} USD </span>
+        }
 
-    <div class="footer">
-      <p class="price">${{ product().price }}</p>
+        <strong class="current-price">
+          {{ currentPrice() }}
+        </strong>
 
-      <app-button size="sm" [loading]="adding()" (clicked)="onAddToCart()">
+        <span class="currency">USD</span>
+      </div>
+
+      <div class="meta-list">
+        <p>
+          <span>Brand:</span>
+          <strong>{{ brand() }}</strong>
+        </p>
+
+        <p>
+          <span>Category:</span>
+          <strong>{{ category() }}</strong>
+        </p>
+
+        <p>
+          <span>In stock:</span>
+          <strong>{{ product().stock }}</strong>
+        </p>
+      </div>
+    </div>
+
+    <div class="card-bottom">
+      <div class="rating-row" aria-label="Rating {{ rating() }}">
+        <span class="star" aria-hidden="true">★</span>
+        <strong>{{ rating() }}</strong>
+        <span class="reviews">({{ reviewsCount() }})</span>
+      </div>
+
+      <app-button
+        size="xl"
+        radius="sm"
+        [fullWidth]="true"
+        [loading]="adding()"
+        (clicked)="onAddToCart()"
+      >
         ADD TO CART
       </app-button>
     </div>
