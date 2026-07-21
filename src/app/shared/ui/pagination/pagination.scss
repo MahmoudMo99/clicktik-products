@@ -27,12 +27,18 @@
   background: var(--color-surface);
   color: var(--color-text-heading);
   font-weight: var(--font-weight-medium);
+  cursor: pointer;
   box-shadow: var(--pagination-shadow);
   transition:
     background-color var(--transition-fast),
     border-color var(--transition-fast),
     color var(--transition-fast),
     opacity var(--transition-fast);
+}
+
+.page-button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-primary) 28%, transparent);
+  outline-offset: 3px;
 }
 
 .page-button:not(:disabled):hover {
@@ -48,6 +54,7 @@
 .page-button:disabled {
   color: var(--pagination-disabled-color);
   opacity: 1;
+  cursor: not-allowed;
 }
 
 .arrow-button {
@@ -72,4 +79,10 @@
   color: var(--color-text-heading);
   font-weight: var(--font-weight-medium);
   user-select: none;
+}
+
+@media (max-width: 640px) {
+  .pagination {
+    gap: var(--space-3);
+  }
 }

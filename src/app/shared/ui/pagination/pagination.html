@@ -22,6 +22,7 @@
           type="button"
           class="page-button"
           [class.active]="currentPage() === item.page"
+          [attr.aria-label]="'Go to page ' + item.page"
           [attr.aria-current]="currentPage() === item.page ? 'page' : null"
           (click)="goToPage(item.page)"
         >

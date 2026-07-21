@@ -13,23 +13,22 @@ type PaginationItem =
 
 @Component({
   selector: 'app-pagination',
-  imports: [],
   templateUrl: './pagination.html',
   styleUrl: './pagination.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Pagination {
-  currentPage = input.required<number>();
-  totalPages = input.required<number>();
+  readonly currentPage = input.required<number>();
+  readonly totalPages = input.required<number>();
 
-  pageChange = output<number>();
+  readonly pageChange = output<number>();
 
   readonly items = computed<PaginationItem[]>(() => {
-    const totalPages = this.totalPages();
+    const totalPages = Math.max(this.totalPages(), 1);
     const currentPage = this.currentPage();
 
     if (totalPages <= 5) {
-      return this.createPageItems(Array.from({ length: totalPages }, (_, index) => index + 1));
+      return createPageItems(Array.from({ length: totalPages }, (_, index) => index + 1));
     }
 
     const pages = new Set<number>([
@@ -66,8 +65,8 @@ export class Pagination {
     }, []);
   });
 
-  readonly isFirstPage = computed(() => this.currentPage() === 1);
-  readonly isLastPage = computed(() => this.currentPage() === this.totalPages());
+  readonly isFirstPage = computed(() => this.currentPage() <= 1);
+  readonly isLastPage = computed(() => this.currentPage() >= this.totalPages());
 
   goToPage(page: number): void {
     if (page < 1 || page > this.totalPages() || page === this.currentPage()) {
@@ -76,12 +75,12 @@ export class Pagination {
 
     this.pageChange.emit(page);
   }
+}
 
-  private createPageItems(pages: number[]): PaginationItem[] {
-    return pages.map((page) => ({
-      type: 'page',
-      page,
-      id: `page-${page}`,
-    }));
-  }
+function createPageItems(pages: number[]): PaginationItem[] {
+  return pages.map((page) => ({
+    type: 'page',
+    page,
+    id: `page-${page}`,
+  }));
 }
