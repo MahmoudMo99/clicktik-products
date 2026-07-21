@@ -11,7 +11,7 @@
     [id]="id()"
     [value]="value()"
     [disabled]="disabled()"
-    [attr.aria-invalid]="hasError()"
+    [attr.aria-invalid]="hasError() || null"
     [attr.aria-describedby]="hasError() ? errorId() : null"
     (change)="onChange($event)"
   >
@@ -23,7 +23,7 @@
   </select>
 
   @if (hasError()) {
-    <p class="error-message" [id]="errorId()">
+    <p class="error-message" [id]="errorId()" role="alert">
       {{ error() }}
     </p>
   }

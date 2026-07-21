@@ -7,23 +7,22 @@ export interface SelectOption {
 
 @Component({
   selector: 'app-select',
-  imports: [],
   templateUrl: './select.html',
   styleUrl: './select.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Select {
-  id = input.required<string>();
-  label = input<string>('');
-  value = input<string>('');
-  options = input.required<SelectOption[]>();
-  disabled = input(false);
-  error = input('');
+  readonly id = input.required<string>();
+  readonly label = input<string>('');
+  readonly value = input<string>('');
+  readonly options = input.required<SelectOption[]>();
+  readonly disabled = input(false);
+  readonly error = input('');
 
-  valueChange = output<string>();
+  readonly valueChange = output<string>();
 
-  hasError = computed(() => this.error().trim().length > 0);
-  errorId = computed(() => `${this.id()}-error`);
+  readonly hasError = computed(() => this.error().trim().length > 0);
+  readonly errorId = computed(() => `${this.id()}-error`);
 
   onChange(event: Event): void {
     const element = event.target as HTMLSelectElement;
