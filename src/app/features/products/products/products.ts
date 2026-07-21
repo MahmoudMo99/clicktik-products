@@ -8,41 +8,27 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, distinctUntilChanged, map, Observable, of, startWith, switchMap } from 'rxjs';
+import type { Observable } from 'rxjs';
+import { catchError, distinctUntilChanged, map, of, shareReplay, startWith, switchMap } from 'rxjs';
 
 import { CartService } from '../../../core/cart/cart.service';
-import { Product, ProductsResponse } from '../../../core/models/product.models';
+import type { Product, ProductsResponse } from '../../../core/models/product.models';
 import { ProductsService } from '../../../core/products/products.service';
 import { EmptyState } from '../../../shared/ui/empty-state/empty-state';
 import { Pagination } from '../../../shared/ui/pagination/pagination';
 import { ProductCard } from '../../../shared/ui/product-card/product-card';
 import { ProductSkeleton } from '../../../shared/ui/product-skeleton/product-skeleton';
-import { Select, SelectOption } from '../../../shared/ui/select/select';
-
-const PAGE_SIZE = 6;
-
-interface ProductsPageQuery {
-  page: number;
-  limit: number;
-  search: string;
-  category: string;
-}
-
-type ProductsState =
-  | { status: 'loading' }
-  | { status: 'success'; response: ProductsResponse }
-  | { status: 'error'; message: string };
-
-const DEFAULT_QUERY: ProductsPageQuery = {
-  page: 1,
-  limit: PAGE_SIZE,
-  search: '',
-  category: '',
-};
-
-const LOADING_STATE: ProductsState = {
-  status: 'loading',
-};
+import type { SelectOption } from '../../../shared/ui/select/select';
+import { Select } from '../../../shared/ui/select/select';
+import type { ProductsPageQuery, ProductsState } from '../models/products-page.models';
+import {
+  DEFAULT_PRODUCTS_QUERY,
+  PRODUCTS_LOADING_STATE,
+  PRODUCTS_PAGE_SIZE,
+} from '../models/products-page.models';
+import { getProductsErrorState } from '../utils/products-errors';
+import { formatCategoryName } from '../utils/products-formatters';
+import { isSameProductsQuery, toProductsPageQuery } from '../utils/products-query';
 
 @Component({
   selector: 'app-products',
@@ -56,11 +42,71 @@ export class Products {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly destroyRef = inject(DestroyRef);
-
   private readonly cartService = inject(CartService);
 
   readonly addingProductId = this.cartService.addingProductId;
   readonly cartErrorMessage = signal('');
+
+  private readonly query$ = this.route.queryParamMap.pipe(
+    map(toProductsPageQuery),
+    distinctUntilChanged(isSameProductsQuery),
+    shareReplay({
+      bufferSize: 1,
+      refCount: true,
+    }),
+  );
+
+  readonly query = toSignal(this.query$, {
+    initialValue: DEFAULT_PRODUCTS_QUERY,
+  });
+
+  readonly categories = toSignal(
+    this.productsService.getCategoriesWithCounts().pipe(catchError(() => of([]))),
+    {
+      initialValue: [],
+    },
+  );
+
+  readonly allProductsCount = toSignal(
+    this.productsService.getProducts({ page: 1, limit: 1 }).pipe(
+      map((response) => response.total),
+      catchError(() => of(0)),
+    ),
+    {
+      initialValue: 0,
+    },
+  );
+
+  readonly productsState = toSignal(
+    this.query$.pipe(
+      switchMap((query) =>
+        this.getProductsByQuery(query).pipe(
+          map((response): ProductsState => ({
+            status: 'success',
+            response,
+          })),
+          startWith(PRODUCTS_LOADING_STATE),
+          catchError((error: unknown) => of(getProductsErrorState(error))),
+        ),
+      ),
+    ),
+    {
+      initialValue: PRODUCTS_LOADING_STATE,
+    },
+  );
+
+  readonly selectedCategoryName = computed(() => {
+    const categorySlug = this.query().category;
+
+    if (!categorySlug) {
+      return '';
+    }
+
+    return (
+      this.categories().find((category) => category.slug === categorySlug)?.name ??
+      formatCategoryName(categorySlug)
+    );
+  });
 
   readonly pageTitle = computed(() => {
     const search = this.query().search;
@@ -71,7 +117,7 @@ export class Products {
     }
 
     if (category) {
-      return this.formatCategoryName(category);
+      return this.selectedCategoryName();
     }
 
     return 'Products';
@@ -101,65 +147,6 @@ export class Products {
     })),
   ]);
 
-  private readonly query$ = this.route.queryParamMap.pipe(
-    map((params): ProductsPageQuery => ({
-      page: this.getValidPage(params.get('page')),
-      limit: PAGE_SIZE,
-      search: params.get('search')?.trim() ?? '',
-      category: params.get('category')?.trim() ?? '',
-    })),
-    distinctUntilChanged(
-      (previous, current) =>
-        previous.page === current.page &&
-        previous.search === current.search &&
-        previous.category === current.category,
-    ),
-  );
-
-  readonly query = toSignal(this.query$, {
-    initialValue: DEFAULT_QUERY,
-  });
-
-  readonly categories = toSignal(
-    this.productsService.getCategoriesWithCounts().pipe(catchError(() => of([]))),
-    {
-      initialValue: [],
-    },
-  );
-
-  readonly allProductsCount = toSignal(
-    this.productsService.getProducts({ page: 1, limit: 1 }).pipe(
-      map((response) => response.total),
-      catchError(() => of(0)),
-    ),
-    {
-      initialValue: 0,
-    },
-  );
-
-  readonly productsState = toSignal(
-    this.query$.pipe(
-      switchMap((query) =>
-        this.getProductsByQuery(query).pipe(
-          map((response): ProductsState => ({
-            status: 'success',
-            response,
-          })),
-          startWith(LOADING_STATE),
-          catchError(() =>
-            of({
-              status: 'error',
-              message: 'Could not load products. Please try again.',
-            } satisfies ProductsState),
-          ),
-        ),
-      ),
-    ),
-    {
-      initialValue: LOADING_STATE,
-    },
-  );
-
   readonly products = computed<Product[]>(() => {
     const state = this.productsState();
 
@@ -172,7 +159,9 @@ export class Products {
     return state.status === 'success' ? state.response.total : 0;
   });
 
-  readonly totalPages = computed(() => Math.max(1, Math.ceil(this.totalProducts() / PAGE_SIZE)));
+  readonly totalPages = computed(() =>
+    Math.max(1, Math.ceil(this.totalProducts() / PRODUCTS_PAGE_SIZE)),
+  );
 
   selectCategory(categorySlug: string): void {
     void this.router.navigate([], {
@@ -200,24 +189,6 @@ export class Products {
     });
   }
 
-  private getProductsByQuery(query: ProductsPageQuery): Observable<ProductsResponse> {
-    if (query.search) {
-      return this.productsService.searchProducts(query.search, query);
-    }
-
-    if (query.category) {
-      return this.productsService.getProductsByCategory(query.category, query);
-    }
-
-    return this.productsService.getProducts(query);
-  }
-
-  private getValidPage(page: string | null): number {
-    const parsedPage = Number(page);
-
-    return Number.isInteger(parsedPage) && parsedPage > 0 ? parsedPage : 1;
-  }
-
   addProductToCart(productId: number): void {
     this.cartErrorMessage.set('');
 
@@ -231,10 +202,15 @@ export class Products {
       });
   }
 
-  private formatCategoryName(category: string): string {
-    return category
-      .split('-')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
+  private getProductsByQuery(query: ProductsPageQuery): Observable<ProductsResponse> {
+    if (query.search) {
+      return this.productsService.searchProducts(query.search, query);
+    }
+
+    if (query.category) {
+      return this.productsService.getProductsByCategory(query.category, query);
+    }
+
+    return this.productsService.getProducts(query);
   }
 }
