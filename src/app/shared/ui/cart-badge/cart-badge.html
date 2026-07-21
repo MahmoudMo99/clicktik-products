@@ -1,9 +1,9 @@
-<div class="cart-badge" [attr.aria-label]="'Cart contains ' + count() + ' products'">
+<div class="cart-badge" role="img" [attr.aria-label]="ariaLabel()">
   <img class="cart-icon" src="/cart.svg" alt="" width="30" height="30" />
 
   @if (count() > 0) {
-    <span class="cart-count">
-      {{ count() }}
+    <span class="cart-count" aria-hidden="true">
+      {{ displayCount() }}
     </span>
   }
 </div>

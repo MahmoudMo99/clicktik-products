@@ -22,17 +22,18 @@
   position: absolute;
   top: -7px;
   right: 0;
-  width: 26px;
+  min-width: 26px;
+  width: auto;
   height: 26px;
+  padding-inline: 6px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-pill);
   background: var(--color-primary);
   color: var(--color-primary-text);
-  font-size: 16px;
+  font-size: var(--font-size-body);
   font-weight: var(--font-weight-regular);
   line-height: 1;
-
   box-shadow: 0 0 0 3px var(--color-header-background);
 }
