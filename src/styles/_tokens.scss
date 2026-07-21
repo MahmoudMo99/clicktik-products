@@ -23,9 +23,9 @@
 
   --font-family-base: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-  --font-size-heading-lg: 30px; /* 30px */
-  --font-size-body: 16px; /* 16px */
-  --font-size-sm: 14px; /* 14px */
+  --font-size-heading-lg: 30px;
+  --font-size-body: 16px;
+  --font-size-sm: 14px;
   --font-size-xs: 12px;
 
   --font-weight-regular: 400;
@@ -33,7 +33,7 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-  --line-height-heading-lg: 2.375rem; /* 38px approximate */
+  --line-height-heading-lg: 2.375rem; /* 38px */
   --line-height-body: 1.5rem; /* 24px */
 
   --space-1: 0.25rem; /* 4px */
@@ -59,7 +59,7 @@
   --container-max-width: 1216px;
   --header-height: 80px;
   --footer-height: 128px;
-  --sidebar-width: 260px;
+  --brand-logo-size: 32px;
 
   --products-content-top-space: 48px;
   --products-title-bottom-space: 48px;
@@ -94,14 +94,13 @@
   --discount-badge-left: 13px;
   --discount-badge-radius: 4px;
   --discount-badge-font-size: 12px;
-  --discount-badge-font-weight: 700;
+  --discount-badge-font-weight: var(--font-weight-bold);
 
   --product-title-font-size: 20px;
-  --product-title-font-weight: 700;
+  --product-title-font-weight: var(--font-weight-bold);
 
   --product-description-font-size: 14px;
-  --product-description-font-weight: 400;
-
+  --product-description-font-weight: var(--font-weight-regular);
   --product-meta-font-size: 14px;
   --product-rating-font-size: 16px;
   --product-rating-star-color: #f4b000;

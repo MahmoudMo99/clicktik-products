@@ -41,8 +41,8 @@
 }
 
 .logo {
-  width: 32px;
-  height: 32px;
+  width: var(--brand-logo-size);
+  height: var(--brand-logo-size);
   object-fit: contain;
   flex: 0 0 auto;
 }
