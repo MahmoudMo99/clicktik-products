@@ -1,59 +1,245 @@
-# ClicktikProducts
+# ClickTik Products
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.19.
+A modern Angular product exploration app built as an Angular technical task.
 
-## Development server
+The app allows users to sign in, browse paginated products, search products, filter by category, and add products to a cart badge using the DummyJSON APIs.
 
-To start a local development server, run:
+## Repository
 
-```bash
-ng serve
+https://github.com/MahmoudMo99/clicktik-products
+
+## Demo Credentials
+
+Use the following DummyJSON demo account to sign in:
+
+```text
+Username: emilys
+Password: emilyspass
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Features
 
-## Code scaffolding
+- Login using DummyJSON Auth API
+- Protected products page using a functional route guard
+- Guest guard to redirect authenticated users away from the login page
+- Product listing with page-based pagination
+- Product search with debounced input
+- Category filtering with product counts
+- URL-driven state for page, search, and category
+- Add product to cart using DummyJSON Cart API
+- Cart badge showing the number of added products
+- Optimistic cart update with rollback on API failure
+- Loading skeletons, empty states, and error states
+- Responsive layout for desktop, tablet, and mobile
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Tech Stack
 
-```bash
-ng generate component component-name
+- Angular 21
+- Standalone Components
+- Zoneless Change Detection
+- Angular Signals
+- RxJS
+- TypeScript
+- SCSS
+- DummyJSON API
+
+## Angular Features Used
+
+- `provideZonelessChangeDetection()`
+- `provideHttpClient(withFetch())`
+- Functional HTTP interceptor
+- Functional route guards
+- Lazy-loaded standalone components with `loadComponent`
+- `withComponentInputBinding()`
+- `withInMemoryScrolling()`
+- `signal`, `computed`, `linkedSignal`
+- `input()`, `input.required()`, `output()`
+- `toSignal()` and `toObservable()`
+- Built-in control flow: `@if`, `@for`, `@switch`, `@empty`, `@let`
+
+## Project Structure
+
+```text
+src/app
+├── core
+│   ├── auth
+│   ├── cart
+│   ├── guards
+│   ├── http
+│   ├── models
+│   ├── products
+│   └── routing
+│
+├── features
+│   ├── login
+│   └── products
+│       ├── models
+│       ├── products
+│       └── utils
+│
+└── shared
+    └── ui
+        ├── button
+        ├── cart-badge
+        ├── empty-state
+        ├── footer
+        ├── header
+        ├── input
+        ├── layout
+        ├── pagination
+        ├── product-card
+        ├── product-skeleton
+        └── select
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Architecture Notes
 
-```bash
-ng generate --help
+### Authentication
+
+Authentication is handled by `AuthService` using Angular signals for session state.
+
+The app stores the authenticated session in `localStorage` and exposes derived state using computed signals:
+
+- `user`
+- `accessToken`
+- `refreshToken`
+- `isAuthenticated`
+
+A functional HTTP interceptor attaches the access token to API requests and attempts to refresh the token when a protected API request returns `401`.
+
+### Routing
+
+The app uses two functional guards:
+
+- `authGuard` protects the products page.
+- `guestGuard` redirects authenticated users away from the login page.
+
+The products page uses URL query parameters as the source of truth:
+
+```text
+/products?page=1
+/products?category=smartphones&page=1
+/products?search=phone&page=1
 ```
 
-## Building
+This keeps pagination, search, and category filtering shareable and browser-friendly.
 
-To build the project run:
+### Products State
 
-```bash
-ng build
+The products page combines Angular signals and RxJS:
+
+- `queryParamMap` is converted into a typed products query.
+- `switchMap` cancels stale product requests when query params change.
+- `toSignal()` exposes the async products state to the template.
+- The template handles loading, success, error, and empty states.
+
+### Search
+
+The header search uses `linkedSignal()` to stay in sync with the current URL search parameter.
+
+Search input changes are converted to an observable with `toObservable()`, debounced using RxJS, and written back to the route query params.
+
+### Cart
+
+DummyJSON cart APIs are simulated and do not persist a real user cart for this task.
+
+The app keeps a lightweight signal-based cart quantity state for the cart badge, while still sending the add-to-cart request to the API.
+
+The cart update is optimistic:
+
+- Badge updates immediately.
+- API request is sent.
+- On success, local state syncs with the API response.
+- On failure, local state rolls back.
+
+### Design System
+
+The UI is built using shared SCSS design tokens and reusable UI components.
+
+Global tokens define:
+
+- colors
+- typography
+- spacing
+- border radius
+- shadows
+- layout sizes
+- product card dimensions
+- form controls
+- pagination
+- focus rings
+
+Reusable UI components include:
+
+- Button
+- Input
+- Select
+- Product Card
+- Pagination
+- Cart Badge
+- Loading Skeleton
+- Empty State
+- Header
+- Footer
+- Layout
+
+## API Endpoints
+
+The app uses DummyJSON APIs:
+
+```text
+POST /auth/login
+POST /auth/refresh
+GET  /products
+GET  /products/search
+GET  /products/category/{category}
+GET  /products/categories
+POST /carts/add
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## Getting Started
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### 1. Clone the repository
 
 ```bash
-ng test
+git clone https://github.com/MahmoudMo99/clicktik-products.git
+cd clicktik-products
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+### 2. Install dependencies
 
 ```bash
-ng e2e
+npm install
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### 3. Run the development server
 
-## Additional Resources
+```bash
+npm start
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Then open:
+
+```text
+http://localhost:4200
+```
+
+### 4. Build
+
+```bash
+npm run build
+```
+
+### 5. Run tests
+
+```bash
+npm test
+```
+
+## Notes
+
+- The login form uses the `username` field internally because DummyJSON Auth expects a username, even though the UI label follows the provided design.
+- Category counts are calculated by requesting each category with `limit=1` and reading the `total` field.
+- Product review counts are displayed dynamically using the product `reviews` array length.
+- The cart badge displays the number of added products only, as required by the task.
+- The app uses route scroll restoration so pagination and navigation return the user to the top of the page.
