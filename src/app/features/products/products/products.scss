@@ -63,21 +63,35 @@
 
 .category-list {
   display: grid;
-  gap: 10px;
+  gap: var(--space-3);
 }
 
 .category-button {
   width: 100%;
   border: 0;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   gap: var(--space-2);
   background: transparent;
   color: var(--color-text-body);
-  padding: 0;
+  padding: var(--space-1) 0;
   font-size: var(--font-size-body);
   line-height: var(--line-height-body);
   text-align: start;
+  cursor: pointer;
+  transition:
+    color var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.category-button:hover {
+  color: var(--color-text-heading);
+}
+
+.category-button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-primary) 28%, transparent);
+  outline-offset: 3px;
 }
 
 .radio-dot {
@@ -147,7 +161,13 @@
 }
 
 .error-message {
+  border: 1px solid color-mix(in srgb, var(--color-danger) 30%, transparent);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--color-danger) 8%, transparent);
   color: var(--color-danger);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-5);
+  font-size: var(--font-size-sm);
 }
 
 .muted {
@@ -194,7 +214,9 @@
   }
 
   .products-toolbar {
-    gap: var(--space-3);
+    align-items: flex-start;
+    flex-direction: column;
+    gap: var(--space-2);
     margin-bottom: var(--space-6);
   }
 
