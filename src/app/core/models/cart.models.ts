@@ -3,6 +3,11 @@ export interface CartRequestProduct {
   quantity: number;
 }
 
+export interface AddToCartRequest {
+  userId: number;
+  products: CartRequestProduct[];
+}
+
 export interface CartProduct {
   id: number;
   title: string;

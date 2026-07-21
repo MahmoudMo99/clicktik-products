@@ -1,10 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { finalize, Observable, tap, throwError } from 'rxjs';
+import { catchError, finalize, Observable, tap, throwError } from 'rxjs';
 
 import { AuthService } from '../auth/auth.service';
 import { API_BASE_URL } from '../http/api.config';
-import { CartRequestProduct, CartResponse } from '../models/cart.models';
+import {
+  AddToCartRequest,
+  CartProduct,
+  CartRequestProduct,
+  CartResponse,
+} from '../models/cart.models';
 
 @Injectable({
   providedIn: 'root',
@@ -13,14 +18,15 @@ export class CartService {
   private readonly http = inject(HttpClient);
   private readonly authService = inject(AuthService);
 
-  private readonly quantities = signal<Record<number, number>>({});
+  private readonly quantitiesState = signal<Record<number, number>>({});
+  private readonly addingProductIdState = signal<number | null>(null);
 
-  readonly addingProductId = signal<number | null>(null);
+  readonly addingProductId = this.addingProductIdState.asReadonly();
 
-  readonly totalProducts = computed(() => Object.keys(this.quantities()).length);
+  readonly totalProducts = computed(() => Object.keys(this.quantitiesState()).length);
 
   readonly totalQuantity = computed(() =>
-    Object.values(this.quantities()).reduce((total, quantity) => total + quantity, 0),
+    Object.values(this.quantitiesState()).reduce((total, quantity) => total + quantity, 0),
   );
 
   addProduct(productId: number): Observable<CartResponse> {
@@ -30,26 +36,49 @@ export class CartService {
       return throwError(() => new Error('User must be authenticated.'));
     }
 
-    const nextQuantities = {
-      ...this.quantities(),
-      [productId]: (this.quantities()[productId] ?? 0) + 1,
-    };
+    const previousQuantities = this.quantitiesState();
+    const nextQuantities = this.getNextQuantities(previousQuantities, productId);
 
-    this.addingProductId.set(productId);
+    this.quantitiesState.set(nextQuantities);
+    this.addingProductIdState.set(productId);
 
     return this.http
-      .post<CartResponse>(`${API_BASE_URL}/carts/add`, {
-        userId: user.id,
-        products: this.getRequestProducts(nextQuantities),
-      })
+      .post<CartResponse>(
+        `${API_BASE_URL}/carts/add`,
+        this.getAddToCartRequest(user.id, nextQuantities),
+      )
       .pipe(
-        tap(() => this.quantities.set(nextQuantities)),
-        finalize(() => this.addingProductId.set(null)),
+        tap((cart) => this.quantitiesState.set(this.getQuantitiesFromProducts(cart.products))),
+        catchError((error: unknown) => {
+          this.quantitiesState.set(previousQuantities);
+          return throwError(() => error);
+        }),
+        finalize(() => this.addingProductIdState.set(null)),
       );
   }
 
   clear(): void {
-    this.quantities.set({});
+    this.quantitiesState.set({});
+  }
+
+  private getNextQuantities(
+    currentQuantities: Record<number, number>,
+    productId: number,
+  ): Record<number, number> {
+    return {
+      ...currentQuantities,
+      [productId]: (currentQuantities[productId] ?? 0) + 1,
+    };
+  }
+
+  private getAddToCartRequest(
+    userId: number,
+    quantities: Record<number, number>,
+  ): AddToCartRequest {
+    return {
+      userId,
+      products: this.getRequestProducts(quantities),
+    };
   }
 
   private getRequestProducts(quantities: Record<number, number>): CartRequestProduct[] {
@@ -57,5 +86,12 @@ export class CartService {
       id: Number(id),
       quantity,
     }));
+  }
+
+  private getQuantitiesFromProducts(products: CartProduct[]): Record<number, number> {
+    return products.reduce<Record<number, number>>((quantities, product) => {
+      quantities[product.id] = product.quantity;
+      return quantities;
+    }, {});
   }
 }
