@@ -1,6 +1,6 @@
 <article class="product-card">
   <div class="image-area">
-    @if (product().discountPercentage > 0) {
+    @if (hasDiscount()) {
       <span class="discount-badge">
         {{ discountLabel() }}
       </span>
@@ -18,7 +18,7 @@
       </p>
 
       <div class="price-row">
-        @if (originalPrice()) {
+        @if (hasDiscount()) {
           <span class="old-price"> {{ originalPrice() }} USD </span>
         }
 

@@ -11,21 +11,21 @@ import { Button } from '../button/button';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductCard {
-  product = input.required<Product>();
-  adding = input(false);
+  readonly product = input.required<Product>();
+  readonly adding = input(false);
 
-  addToCart = output<number>();
+  readonly addToCart = output<number>();
+
+  readonly hasDiscount = computed(() => this.product().discountPercentage > 0);
 
   readonly discountLabel = computed(() => `- ${this.product().discountPercentage.toFixed(2)}%`);
 
   readonly originalPrice = computed(() => this.formatPrice(this.product().price));
 
-  readonly reviewsCount = computed(() => this.product().reviews?.length ?? 0);
-
   readonly currentPrice = computed(() => {
     const product = this.product();
 
-    if (!product.discountPercentage) {
+    if (!this.hasDiscount()) {
       return this.formatPrice(product.price);
     }
 
@@ -34,6 +34,8 @@ export class ProductCard {
     return this.formatPrice(discountedPrice);
   });
 
+  readonly reviewsCount = computed(() => this.product().reviews?.length ?? 0);
+
   readonly brand = computed(() => this.product().brand || 'N/A');
 
   readonly category = computed(() => this.formatCategory(this.product().category));
@@ -41,6 +43,10 @@ export class ProductCard {
   readonly rating = computed(() => this.product().rating.toFixed(2));
 
   onAddToCart(): void {
+    if (this.adding()) {
+      return;
+    }
+
     this.addToCart.emit(this.product().id);
   }
 
