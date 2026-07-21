@@ -14,6 +14,8 @@ import { CartService } from '../../../core/cart/cart.service';
 import { Footer } from '../footer/footer';
 import { Header } from '../header/header';
 
+const SEARCH_DEBOUNCE_MS = 400;
+
 @Component({
   selector: 'app-layout',
   imports: [RouterOutlet, Header, Footer],
@@ -32,7 +34,7 @@ export class Layout {
   readonly cartCount = this.cartService.totalQuantity;
 
   private readonly searchFromUrl = toSignal(
-    this.route.queryParamMap.pipe(map((params) => params.get('search') ?? '')),
+    this.route.queryParamMap.pipe(map((params) => params.get('search')?.trim() ?? '')),
     {
       initialValue: '',
     },
@@ -41,27 +43,7 @@ export class Layout {
   readonly headerSearch = linkedSignal(() => this.searchFromUrl());
 
   constructor() {
-    toObservable(this.headerSearch)
-      .pipe(
-        debounceTime(400),
-        map((value) => value.trim()),
-        distinctUntilChanged(),
-        takeUntilDestroyed(this.destroyRef),
-      )
-      .subscribe((search) => {
-        if (!this.isAuthenticated() || search === this.searchFromUrl()) {
-          return;
-        }
-
-        void this.router.navigate(['/products'], {
-          queryParams: {
-            search: search || null,
-            category: null,
-            page: 1,
-          },
-          queryParamsHandling: 'merge',
-        });
-      });
+    this.handleHeaderSearchChanges();
   }
 
   updateHeaderSearch(search: string): void {
@@ -74,5 +56,37 @@ export class Layout {
     this.headerSearch.set('');
 
     void this.router.navigate(['/login']);
+  }
+
+  private handleHeaderSearchChanges(): void {
+    toObservable(this.headerSearch)
+      .pipe(
+        debounceTime(SEARCH_DEBOUNCE_MS),
+        map((value) => value.trim()),
+        distinctUntilChanged(),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe((search) => {
+        if (!this.shouldNavigateToSearch(search)) {
+          return;
+        }
+
+        this.navigateToSearchResults(search);
+      });
+  }
+
+  private shouldNavigateToSearch(search: string): boolean {
+    return this.isAuthenticated() && search !== this.searchFromUrl();
+  }
+
+  private navigateToSearchResults(search: string): void {
+    void this.router.navigate(['/products'], {
+      queryParams: {
+        search: search || null,
+        category: null,
+        page: 1,
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 }

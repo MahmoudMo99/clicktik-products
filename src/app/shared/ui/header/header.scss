@@ -35,7 +35,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-3);
-  color: #000000;
+  color: var(--color-brand-text);
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-semibold);
 }
@@ -50,7 +50,7 @@
 .nav-link,
 .login-link,
 .account-button {
-  color: #667085;
+  color: var(--color-nav-link);
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-medium);
 }
@@ -81,7 +81,7 @@
 .search-icon {
   width: 18px;
   height: 18px;
-  color: #98a2b3;
+  color: var(--color-search-icon);
 }
 
 .search-icon svg {
@@ -101,7 +101,7 @@
 }
 
 .search-box input::placeholder {
-  color: #98a2b3;
+  color: var(--color-search-icon);
 }
 
 .sr-only {
@@ -111,6 +111,31 @@
   overflow: hidden;
   clip-path: inset(50%);
   white-space: nowrap;
+}
+
+.brand,
+.nav-link,
+.login-link {
+  text-decoration: none;
+}
+
+.nav-link:hover,
+.login-link:hover,
+.account-button:hover {
+  color: var(--color-text-heading);
+}
+
+.account-button {
+  cursor: pointer;
+}
+
+.brand:focus-visible,
+.nav-link:focus-visible,
+.login-link:focus-visible,
+.account-button:focus-visible,
+.search-box:focus-within {
+  outline: 3px solid color-mix(in srgb, var(--color-primary) 22%, transparent);
+  outline-offset: 3px;
 }
 
 @media (max-width: 900px) {
@@ -138,12 +163,33 @@
 }
 
 @media (max-width: 560px) {
+  .header {
+    height: auto;
+  }
+
+  .header-content {
+    height: auto;
+    min-height: var(--header-height);
+    flex-wrap: wrap;
+    align-content: center;
+    gap: var(--space-3);
+    padding-block: var(--space-3);
+  }
+
+  .header-left {
+    width: 100%;
+    justify-content: space-between;
+  }
+
   .header-right {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
     gap: var(--space-3);
   }
 
   .search-box {
-    display: none;
+    width: 100%;
   }
 
   .brand-name {

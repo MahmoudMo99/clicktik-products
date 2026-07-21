@@ -11,12 +11,12 @@ import { CartBadge } from '../cart-badge/cart-badge';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Header {
-  isAuthenticated = input.required<boolean>();
-  cartCount = input.required<number>();
-  searchValue = input<string>('');
+  readonly isAuthenticated = input.required<boolean>();
+  readonly cartCount = input.required<number>();
+  readonly searchValue = input<string>('');
 
-  searchValueChange = output<string>();
-  logoutClicked = output<void>();
+  readonly searchValueChange = output<string>();
+  readonly logoutClicked = output<void>();
 
   onSearchInput(event: Event): void {
     const input = event.target as HTMLInputElement;

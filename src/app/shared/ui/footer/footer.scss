@@ -6,7 +6,7 @@
   height: var(--footer-height);
   display: flex;
   align-items: center;
-  background: #1f2d3d;
+  background: var(--color-footer-background);
 }
 
 .footer-content {
@@ -15,16 +15,17 @@
   align-items: center;
   justify-content: space-between;
   margin-inline: auto;
-  color: #98a2b3;
+  color: var(--color-footer-text);
 }
 
 .brand {
   display: inline-flex;
   align-items: center;
   gap: var(--space-3);
-  color: #ffffff;
+  color: var(--color-footer-brand);
   font-size: var(--font-size-body);
   font-weight: var(--font-weight-semibold);
+  text-decoration: none;
 }
 
 .logo {
@@ -35,7 +36,7 @@
 }
 
 .footer-content p {
-  color: #98a2b3;
+  color: var(--color-footer-text);
   font-size: var(--font-size-body);
 }
 

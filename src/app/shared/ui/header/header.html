@@ -26,6 +26,9 @@
           <input
             type="search"
             placeholder="Search"
+            autocomplete="off"
+            spellcheck="false"
+            aria-label="Search products"
             [value]="searchValue()"
             (input)="onSearchInput($event)"
           />
@@ -33,7 +36,13 @@
 
         <app-cart-badge [count]="cartCount()" />
 
-        <button type="button" class="account-button" title="Log out" (click)="onLogoutClick()">
+        <button
+          type="button"
+          class="account-button"
+          title="Log out"
+          aria-label="Log out"
+          (click)="onLogoutClick()"
+        >
           Account
         </button>
       </div>
