@@ -46,6 +46,7 @@ export class Products {
 
   readonly addingProductId = this.cartService.addingProductId;
   readonly cartErrorMessage = signal('');
+  readonly skeletonCount = PRODUCTS_PAGE_SIZE;
 
   private readonly query$ = this.route.queryParamMap.pipe(
     map(toProductsPageQuery),
