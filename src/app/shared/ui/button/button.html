@@ -2,7 +2,7 @@
   [class]="buttonClasses()"
   [type]="type()"
   [disabled]="isDisabled()"
-  [attr.aria-busy]="loading()"
+  [attr.aria-busy]="loading() || null"
   (click)="onClick($event)"
 >
   @if (loading()) {

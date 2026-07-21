@@ -1,5 +1,5 @@
 :host {
-  display: inline-flex;
+  display: block;
 }
 
 .button {
@@ -11,6 +11,7 @@
   font-family: var(--font-family-base);
   font-weight: var(--font-weight-semibold);
   line-height: 1;
+  cursor: pointer;
   box-shadow: var(--shadow-xs);
   transition:
     background-color var(--transition-fast),
@@ -20,12 +21,18 @@
     transform var(--transition-fast);
 }
 
+.button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-primary) 28%, transparent);
+  outline-offset: 3px;
+}
+
 .button:not(:disabled):active {
   transform: translateY(1px);
 }
 
 .button:disabled {
   opacity: 0.65;
+  cursor: not-allowed;
 }
 
 .button-sm {

@@ -7,24 +7,23 @@ type ButtonRadius = 'sm' | 'md';
 
 @Component({
   selector: 'app-button',
-  imports: [],
   templateUrl: './button.html',
   styleUrl: './button.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Button {
-  variant = input<ButtonVariant>('primary');
-  size = input<ButtonSize>('md');
-  type = input<ButtonType>('button');
-  radius = input<ButtonRadius>('md');
+  readonly variant = input<ButtonVariant>('primary');
+  readonly size = input<ButtonSize>('md');
+  readonly type = input<ButtonType>('button');
+  readonly radius = input<ButtonRadius>('md');
 
-  disabled = input(false);
-  loading = input(false);
-  fullWidth = input(false);
+  readonly disabled = input(false);
+  readonly loading = input(false);
+  readonly fullWidth = input(false);
 
-  clicked = output<MouseEvent>();
+  readonly clicked = output<MouseEvent>();
 
-  buttonClasses = computed(() =>
+  readonly buttonClasses = computed(() =>
     [
       'button',
       `button-${this.variant()}`,
@@ -37,7 +36,7 @@ export class Button {
       .join(' '),
   );
 
-  isDisabled = computed(() => this.disabled() || this.loading());
+  readonly isDisabled = computed(() => this.disabled() || this.loading());
 
   onClick(event: MouseEvent): void {
     if (this.isDisabled()) {
