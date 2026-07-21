@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, forkJoin, map, Observable, of, switchMap } from 'rxjs';
+import { catchError, forkJoin, map, Observable, of, shareReplay, switchMap } from 'rxjs';
 
 import { API_BASE_URL } from '../http/api.config';
 import {
@@ -10,12 +10,24 @@ import {
   ProductsResponse,
 } from '../models/product.models';
 
+const CATEGORY_COUNT_QUERY: ProductsQuery = {
+  page: 1,
+  limit: 1,
+};
+
 @Injectable({
   providedIn: 'root',
 })
 export class ProductsService {
   private readonly http = inject(HttpClient);
   private readonly productsUrl = `${API_BASE_URL}/products`;
+
+  private readonly categoriesWithCounts$ = this.loadCategoriesWithCounts().pipe(
+    shareReplay({
+      bufferSize: 1,
+      refCount: false,
+    }),
+  );
 
   getProducts(query: ProductsQuery): Observable<ProductsResponse> {
     return this.http.get<ProductsResponse>(this.productsUrl, {
@@ -33,9 +45,12 @@ export class ProductsService {
   }
 
   getProductsByCategory(categorySlug: string, query: ProductsQuery): Observable<ProductsResponse> {
-    return this.http.get<ProductsResponse>(`${this.productsUrl}/category/${categorySlug}`, {
-      params: this.getPaginationParams(query),
-    });
+    return this.http.get<ProductsResponse>(
+      `${this.productsUrl}/category/${encodeURIComponent(categorySlug)}`,
+      {
+        params: this.getPaginationParams(query),
+      },
+    );
   }
 
   getCategories(): Observable<ProductCategory[]> {
@@ -43,6 +58,10 @@ export class ProductsService {
   }
 
   getCategoriesWithCounts(): Observable<ProductCategoryWithCount[]> {
+    return this.categoriesWithCounts$;
+  }
+
+  private loadCategoriesWithCounts(): Observable<ProductCategoryWithCount[]> {
     return this.getCategories().pipe(
       switchMap((categories) => {
         if (!categories.length) {
@@ -51,10 +70,7 @@ export class ProductsService {
 
         return forkJoin(
           categories.map((category) =>
-            this.getProductsByCategory(category.slug, {
-              page: 1,
-              limit: 1,
-            }).pipe(
+            this.getProductsByCategory(category.slug, CATEGORY_COUNT_QUERY).pipe(
               map((response) => ({
                 ...category,
                 count: response.total,
@@ -69,13 +85,17 @@ export class ProductsService {
           ),
         );
       }),
+      catchError(() => of([])),
     );
   }
 
   private getPaginationParams(query: ProductsQuery): Record<string, number> {
+    const page = Math.max(query.page, 1);
+    const limit = Math.max(query.limit, 1);
+
     return {
-      limit: query.limit,
-      skip: (query.page - 1) * query.limit,
+      limit,
+      skip: (page - 1) * limit,
     };
   }
 }

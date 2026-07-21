@@ -19,7 +19,7 @@ import { ProductCard } from '../../../shared/ui/product-card/product-card';
 import { ProductSkeleton } from '../../../shared/ui/product-skeleton/product-skeleton';
 import { Select, SelectOption } from '../../../shared/ui/select/select';
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 6;
 
 interface ProductsPageQuery {
   page: number;
