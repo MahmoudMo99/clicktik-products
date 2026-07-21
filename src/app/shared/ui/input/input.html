@@ -13,13 +13,14 @@
     [value]="value()"
     [placeholder]="placeholder()"
     [disabled]="disabled()"
-    [attr.aria-invalid]="hasError()"
+    [autocomplete]="autocomplete()"
+    [attr.aria-invalid]="hasError() || null"
     [attr.aria-describedby]="hasError() ? errorId() : null"
     (input)="onInput($event)"
   />
 
   @if (hasError()) {
-    <p class="error-message" [id]="errorId()">
+    <p class="error-message" [id]="errorId()" role="alert">
       {{ error() }}
     </p>
   }

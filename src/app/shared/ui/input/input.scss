@@ -16,6 +16,7 @@
 .input {
   width: 100%;
   height: var(--control-height);
+  box-sizing: border-box;
   border: 1px solid var(--color-border);
   border-radius: var(--control-radius);
   background: var(--color-input-background);
@@ -43,6 +44,7 @@
 .input:disabled {
   background: var(--color-surface);
   opacity: 0.65;
+  cursor: not-allowed;
 }
 
 .input-error {
@@ -59,6 +61,7 @@
 .error-message {
   color: var(--color-danger);
   font-size: var(--font-size-sm);
+  line-height: 1.4;
 }
 
 .input:-webkit-autofill,
