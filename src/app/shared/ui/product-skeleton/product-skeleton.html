@@ -1,6 +1,6 @@
-<div class="skeleton-grid" role="status" aria-label="Loading products">
+<div class="skeleton-grid" role="status" aria-live="polite" aria-label="Loading products">
   @for (item of items(); track item) {
-    <article class="skeleton-card">
+    <article class="skeleton-card" aria-hidden="true">
       <div class="skeleton-image"></div>
 
       <div class="skeleton-content">

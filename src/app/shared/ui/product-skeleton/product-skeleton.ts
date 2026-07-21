@@ -2,13 +2,14 @@ import { ChangeDetectionStrategy, Component, computed, input } from '@angular/co
 
 @Component({
   selector: 'app-product-skeleton',
-  imports: [],
   templateUrl: './product-skeleton.html',
   styleUrl: './product-skeleton.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductSkeleton {
-  count = input(12);
+  readonly count = input(6);
 
-  items = computed(() => Array.from({ length: this.count() }, (_, index) => index));
+  readonly items = computed(() =>
+    Array.from({ length: Math.max(this.count(), 0) }, (_, index) => index),
+  );
 }
