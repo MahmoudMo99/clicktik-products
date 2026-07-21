@@ -2,8 +2,7 @@ import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 
 import { AuthService } from '../auth/auth.service';
-
-const DEFAULT_AUTHENTICATED_ROUTE = '/products';
+import { getPostLoginRedirectUrl } from '../routing/route-utils';
 
 export const guestGuard: CanActivateFn = (route) => {
   const authService = inject(AuthService);
@@ -15,13 +14,5 @@ export const guestGuard: CanActivateFn = (route) => {
 
   const returnUrl = route.queryParamMap.get('returnUrl');
 
-  return router.parseUrl(getSafeReturnUrl(returnUrl));
+  return router.parseUrl(getPostLoginRedirectUrl(returnUrl));
 };
-
-function getSafeReturnUrl(returnUrl: string | null): string {
-  if (returnUrl?.startsWith('/') && !returnUrl.startsWith('//')) {
-    return returnUrl;
-  }
-
-  return DEFAULT_AUTHENTICATED_ROUTE;
-}

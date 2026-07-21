@@ -24,6 +24,7 @@
 }
 
 .login-card-header {
+  width: 100%;
   display: grid;
   gap: var(--login-header-gap);
   margin-bottom: var(--login-header-bottom-space);
@@ -63,5 +64,15 @@
   .login-page {
     min-height: auto;
     padding-block: var(--space-12);
+  }
+
+  .login-card-header h1 {
+    font-size: 28px;
+    line-height: 36px;
+  }
+
+  .login-card-header p {
+    font-size: var(--font-size-sm);
+    line-height: 22px;
   }
 }

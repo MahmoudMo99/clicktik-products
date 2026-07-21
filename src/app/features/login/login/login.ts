@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -10,10 +9,14 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs';
+
+import { getLoginErrorMessage } from '../../../core/auth/auth-errors';
 import { LoginCredentials } from '../../../core/auth/auth.models';
 import { AuthService } from '../../../core/auth/auth.service';
+import { getPostLoginRedirectUrl } from '../../../core/routing/route-utils';
 import { Button } from '../../../shared/ui/button/button';
 import { Input } from '../../../shared/ui/input/input';
+
 @Component({
   selector: 'app-login',
   imports: [Button, Input],
@@ -47,6 +50,8 @@ export class Login {
   readonly isFormInvalid = computed(() => Boolean(this.usernameError() || this.passwordError()));
 
   updateUsername(username: string): void {
+    this.errorMessage.set('');
+
     this.form.update((form) => ({
       ...form,
       username,
@@ -54,6 +59,8 @@ export class Login {
   }
 
   updatePassword(password: string): void {
+    this.errorMessage.set('');
+
     this.form.update((form) => ({
       ...form,
       password,
@@ -62,6 +69,10 @@ export class Login {
 
   onSubmit(event: SubmitEvent): void {
     event.preventDefault();
+
+    if (this.loading()) {
+      return;
+    }
 
     this.submitted.set(true);
     this.errorMessage.set('');
@@ -83,21 +94,15 @@ export class Login {
       )
       .subscribe({
         next: () => {
-          const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl') ?? '/products';
+          const returnUrl = getPostLoginRedirectUrl(
+            this.route.snapshot.queryParamMap.get('returnUrl'),
+          );
 
           void this.router.navigateByUrl(returnUrl);
         },
         error: (error: unknown) => {
-          this.errorMessage.set(this.getLoginErrorMessage(error));
+          this.errorMessage.set(getLoginErrorMessage(error));
         },
       });
-  }
-
-  private getLoginErrorMessage(error: unknown): string {
-    if (error instanceof HttpErrorResponse && error.status === 400) {
-      return 'Invalid username or password.';
-    }
-
-    return 'Something went wrong. Please try again.';
   }
 }
